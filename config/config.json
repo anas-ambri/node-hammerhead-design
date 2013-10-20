@@ -1,0 +1,8 @@
+{
+    "env": {
+	"sfold_path": "sfold",
+	"unafold_path": "UNAFold.pl"
+    },
+    "log_level": 0
+}
+    

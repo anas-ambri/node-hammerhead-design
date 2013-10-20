@@ -1,0 +1,164 @@
+<Request>
+  <Prefs>
+  </Prefs>
+  <SFoldStructures>
+    <StructureInfo>
+    </StructureInfo>
+    <StructureInfo>
+    </StructureInfo>(x10)
+  </SFoldStructures>
+  <AverageLowestFreeEnergy>
+   some number for the unconstraint fold
+  </AverageLowestFreeEnergy>
+  <CutsiteTypesCandidateContainer><!--:Array-->
+    <CutsiteTypeCutsiteContainer><!--:element of CutsiteTypeCandidateContainer-->
+        <type>GUC</type>
+        <Cutsites><!--:Array-->
+          <cutsite><!--:element of cutsitetype-->
+              <ID>GUC0</ID>
+              <AverageLowestFreeEnergy>
+                some value
+              </AverageLowestFreeEnergy>
+              <Location>30</Location>
+              <ConstrainedSFoldStructures>
+                <StructureInfo>
+                </StructureInfo>
+                <StructureInfo>
+                </StructureInfo>(x10)
+              </ConstrainedSFoldStructures>
+              <Candidates><!--:Array-->
+                <candidate><!--:Elememt-->
+                    <Sequence/>
+                    <CataliticCoreStart/>
+                    <ID/>
+                    <StructuresSFold>
+                      <StructureInfo>
+                        <EnergyInterval>Min:x,Max:y</EnergyInterval>
+                        <Frequency>90%</Frequency>
+                        <LowestFreeEnergy>0</LowestFreeEnergy>
+                        <Fitness></Fitness>
+                        <ConnectedPairs><!--:Array-->
+                          <Pair>left:1 right:-1 type:G</Pair>
+                          <Pair>left:2 right:-1 type:A</Pair>
+                          <Pair>left:3 right:-1 type:A</Pair>
+                          <Pair>left:4 right:-1 type:U</Pair>
+                          ...
+                        </ConnectedPairs>
+                      </StructureInfo>
+                      <StructureInfo>
+                        <EnergyInterval>Min:x,Max:y</EnergyInterval>
+                        <Frequency>90%</Frequency>
+                        <LowestFreeEnergy>0</LowestFreeEnergy>
+                        <Fitness></Fitness>
+                        <ConnectedPairs><!--:Array-->
+                          <Pair>left:1 right:-1 type:G</Pair>
+                          <Pair>left:2 right:-1 type:A</Pair>
+                          <Pair>left:3 right:-1 type:A</Pair>
+                          <Pair>left:4 right:-1 type:U</Pair>
+                          ...
+                        </ConnectedPairs>
+                      </StructureInfo>
+                      <StructureInfo>
+                        <EnergyInterval>Min:x,Max:y</EnergyInterval>
+                        <Frequency>90%</Frequency>
+                        <LowestFreeEnergy>0</LowestFreeEnergy>
+                        <Fitness></Fitness>
+                        <ConnectedPairs><!--:Array-->
+                          <Pair>left:1 right:-1 type:G</Pair>
+                          <Pair>left:2 right:-1 type:A</Pair>
+                          <Pair>left:3 right:-1 type:A</Pair>
+                          <Pair>left:4 right:-1 type:U</Pair>
+                          ...
+                        </ConnectedPairs>
+                      </StructureInfo>
+                    </StructuresSFold><!--:Array-->
+                    <StructureUnaFold/>
+                    <Fitness_Shape/>
+                    <Fitness_Shape_dG/>
+                    <Fitness_Target/>
+                    <Fitness_Target_dG/>
+                    <Fitness_Specificity/>
+                    <Fitness_AnnealingT/>
+                    <CataliticCoreType/>
+                    <cutSiteID/>
+                    <cutSiteLocation/>
+                    <requestID/>
+                </candidate>
+                <candidate>
+                    <Sequence/>
+                    <CataliticCoreStart/>
+                    <ID/>
+                    <StructuresSFold><!--:Array-->
+                    </StructuresSFold>
+                    <StructureUnaFold/>
+                    <Fitness_Shape/>
+                    <Fitness_Shape_dG/>
+                    <Fitness_Target/>
+                    <Fitness_Target_dG/>
+                    <Fitness_Specificity/>
+                    <Fitness_AnnealingT/>
+                    <CataliticCoreType/>
+                    <cutSiteID/>
+                    <cutSiteLocation/>
+                    <requestID/>
+                </candidate>
+              </Candidates>
+          </cutsite>
+          <cutsite>
+              <ID>GUC1</ID>
+              <AverageLowestFreeEnergy>
+                some value
+              </AverageLowestFreeEnergy>
+              <Location>30</Location>
+              <ConstrainedSFoldStructures>
+                <StructureInfo>
+                </StructureInfo>
+                <StructureInfo>
+                </StructureInfo>(x10)
+              </ConstrainedSFoldStructures>
+              <Candidates>
+                .......
+              </Candidates>
+          </cutsite>
+          <cutsite>
+              <ID>GUC2</ID>
+              <AverageLowestFreeEnergy>
+                some value
+              </AverageLowestFreeEnergy>
+              <Location>30</Location>
+              <Candidates>
+              </Candidates>
+          </cutsite>
+        </Cutsites>
+    </CutsiteTypeCutsiteContainer>
+    <CutsiteTypeCutsiteContainer><!--:Array-->
+        <type>GUA</type>
+        <Cutsites>
+          <cutsite><!--:elemnt of Array-->
+              <ID>GUA0</ID>
+              <Location>30</Location>
+              <ConstrainedSFoldStructures>
+                <StructureInfo>
+                </StructureInfo>
+                <StructureInfo>
+                </StructureInfo>(x10)
+              </ConstrainedSFoldStructures>
+              <Candidates>
+              </Candidates>
+          </cutsite>
+          <cutsite>
+              <ID>GUA1</ID>
+              <Location>30</Location>
+              <Candidates>
+              </Candidates>
+          </cutsite>
+          <cutsite>
+              <ID>GUA2</ID>
+              <Location>30</Location>
+              <Candidates>
+              </Candidates>
+          </cutsite>
+        </Cutsites>
+    </CutsiteTypeCutsiteContainer>
+  </CutsiteTypesCandidateContainer>
+</Request> 
