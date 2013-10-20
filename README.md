@@ -9,8 +9,8 @@ More details soon.
 ##Installation##
 ###Github###
 
-   $ git clone git://git@github.com:anas-ambri/node-hammerhead-design.git
-   $ cd node-hammerhead-design
+    $ git clone git://git@github.com:anas-ambri/node-hammerhead-design.git
+    $ cd node-hammerhead-design
 	
 
 ###NPM###
