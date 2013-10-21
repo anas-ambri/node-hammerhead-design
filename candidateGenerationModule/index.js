@@ -1,5 +1,5 @@
 var Utils = require('../AlgorithmUtilities.js');
-var Log = require('log').Log;
+var Log = require('./../log/').Log;
 var ReverseComplement = Utils.ReverseComplement;
 var DnaToRna = Utils.DnaToRna;
 
