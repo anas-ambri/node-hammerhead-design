@@ -3,7 +3,7 @@ var FileSeparator = require('path').sep;
 var Model = require('../model/');
 var Candidate = Model.DomainObjects.Candidate;
 var StructureInfo = Model.DomainObjects.StructureInfo;
-var Log = require('log').Log
+var Log = require('./../log/').Log
 function RemoveAllValuesFromArray(arr,val)
 {
 	var index = arr.indexOf(val);

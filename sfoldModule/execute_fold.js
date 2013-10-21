@@ -1,4 +1,4 @@
-var Log = require('log').Log;
+var Log = require('./../log/').Log;
 
 var config = require('../config/config.json');
 var sfold_path = config.env.sfold_path;
