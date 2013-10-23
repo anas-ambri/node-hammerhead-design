@@ -8,14 +8,15 @@ var Model = require('./model/');
 var MeltingTemp = require('./meltingTemp/');
 var Candidate = Model.DomainObjects.Candidate;
 var CutsiteTypeCutsiteContainer = Model.DomainObjects.CutsiteTypeCutsiteContainer;
-var Log = require('./log/').Log
+var Log = require('log').Log
 //var ReportObject = Model.DomainObjects.ReportObject;
 var path = require('path');
 var FileSeparator = require('path').sep;
 var AddCore = CandidateGenerationModule.AddCore;
 var FitnessEvaluationModule = require('./fitnessEvaluation/');
 var AlgorithmUtilities = require('./AlgorithmUtilities.js');
-var fs = require('fs');
+var TEST_COMPRESSION = false;
+
 
 
 function ReportObject(request)
@@ -25,12 +26,27 @@ function ReportObject(request)
     this.TotalCount = 0;
 }
 
+/*
+    <summary>
+        Adds a number to the amount that the report object is expecting to execute
+    </summary>
+    <param name='ammount'>The amount to add to the total count</param>
+    <return>None</return>
+*/
 ReportObject.prototype.AddToExecutionCount = function (ammount)
 {
     this.FileCount += ammount;
     this.TotalCount += ammount;
 }
 
+/*
+    <summary>
+        Callback executed by the asynchronous functions. The object then checks if it is the last execution 
+        and if it is, it will initiate the next part
+    </summary>
+    <param name='part'>The next part that should be executed should all the asynchronous operations be complete</param>
+    <return>None</return>
+*/
 ReportObject.prototype.ExecuteIfComplete = function (part)
 {
     Log("Current execution count " + this.FileCount, "ReportObject.ExecuteIfComplete", 6);
@@ -98,10 +114,18 @@ ReportObject.prototype.ExecuteIfComplete = function (part)
     }
 }
 
-
+/*
+    <summary>
+        Serializes the request object into a string and saves it unto a file.
+        It also saves the cutsite objects and saves them in their respective object for easy access
+    </summary>
+    <param name='request'>The request object to be saved recursively</param>
+    <return>None</return>
+*/
 function SaveRequest(request) {
 
     var str = JSON.stringify(request);
+    var fs = require('fs');
     fs.writeFileSync(path.join(request.ID, 'requestState.json'), str);
     var cutsiteTypesLength = request.CutsiteTypesCandidateContainer.length;
     for (var ii = 0; ii < cutsiteTypesLength; ++ii) {
@@ -114,12 +138,13 @@ function SaveRequest(request) {
     }
 }
 
-function SaveRequestUncompressed(request){
-    fs.writeFileSync(path.join(request.ID, 'requestStateUncompressed.json'), JSON.stringify(request));
-};
-
-
-
+/*
+    <summary>
+        Counts the number of raw candidates, on a cutsite basis.
+    </summary>
+    <param name='rawCandidates'>The raw candidates from the candidate generation module</param>
+    <return>None</return>
+*/
 function CountCandidatesFromRaw(rawCandidates)
 {
     var res = 0;
@@ -130,6 +155,12 @@ function CountCandidatesFromRaw(rawCandidates)
     return res;
 }
 
+/*
+    <summary>
+    </summary>
+    <param name='ammount'>The amount to add to the total count</param>
+    <return>None</return>
+*/
 function VerifyParameters(request)
 {
     var allOk = true;
@@ -242,6 +273,7 @@ function _handleRequestPart1(request)
     }
 
     //Make directory for request
+    var fs = require('fs');
     fs.mkdirSync(request.ID);
 
 
@@ -579,6 +611,7 @@ function HandleRequestPart4(reportObj) {
 /* ******************************************************************************************************************* */
 function _handleRequestPart5(reportObj) {
     var request = reportObj.Request;
+    var fs = require('fs');
     var targetSeqFile = request.ID + '/Target.seq';
     fs.writeFileSync(targetSeqFile, '> File for target sequence\n' + request.TargetSequence);
     var resultDir = request.ID + '/Target';
@@ -678,9 +711,12 @@ function HandleRequestPart7(reportObj) {
     request.UpdateState("Pareto front computation started");
     FitnessEvaluationModule.ParetoFrontForRequest(request);
     request.UpdateState("Pareto front computation completed");
-
-    SaveRequestUncompressed(request);
-
+    if (TEST_COMPRESSION)
+    {
+        var str = JSON.stringify(request);
+        var fs = require('fs');
+        fs.writeFileSync(path.join(request.ID, 'requestStateUncompressed.json'), str);
+    }
     reportObj.Request.UpdateState('Compressing results');
     for (var ii = 0; ii < request.CutsiteTypesCandidateContainer.length; ++ii)
     {

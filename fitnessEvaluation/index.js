@@ -5,12 +5,13 @@ Array.prototype.RemoveAt = function (index) {
 }
 
 Array.prototype.RemoveAtMany = function (arrayOfIndexes) {
-    arrayOfIndexes.sort(function (a, b) { return a > b;});
+    arrayOfIndexes.sort(function (a, b) { return a > b;});//This ensures that the indexes are in order
     for (var ii = 0; ii < arrayOfIndexes.length; ++ii)
     {
-        this.RemoveAt(arrayOfIndexes[ii]-ii);
+        this.RemoveAt(arrayOfIndexes[ii]-ii);//The ii accounts for the index that was removed.
     }
 }
+
 /*
     <summary>
         Finds if elementLeft is the same as elementRight.
