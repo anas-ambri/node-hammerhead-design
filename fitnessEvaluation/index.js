@@ -130,6 +130,7 @@ function ParetoFrontRank(array, propertyArray, maxMinArray, rank)
 
 function ParetoFrontForRequest(request)
 {
+    var allEle = new Array();
     for (var ii = 0; ii < request.CutsiteTypesCandidateContainer.length; ++ii)
     {
         var cutsiteType = request.CutsiteTypesCandidateContainer[ii];
@@ -137,12 +138,13 @@ function ParetoFrontForRequest(request)
         {
             var cutsite = cutsiteType.Cutsites[jj];
             var candidates = cutsite.Candidates;
-            ParetoFrontRank(candidates,
-                ["Fitness_Shape", "Fitness_Shape_dG", "Fitness_Target", "Fitness_Target_dG", "Fitness_Specificity", "MeltingTemperature"],
-                [false,          false,                 false,          false,               false,                 false],
-                0);
+            allEle.push.apply(allEle,candidates);
         }
     }
+    ParetoFrontRank(allEle,
+    ["Fitness_Shape", "Fitness_Shape_dG", "Fitness_Target", "Fitness_Target_dG", "Fitness_Specificity", "MeltingTemperature"],
+    [false, false, false, false, false, false],
+    0);
 }
 
 /*
@@ -263,6 +265,8 @@ function EvaluateTargetFoldsFitness(structureInfoArray, leftArmLength, rightArmL
 function EvaluateFitnesses(request) {
     var NormalSFoldShapes = request.SFoldStructures;
     var cutsiteTypesLength = request.CutsiteTypesCandidateContainer.length;
+
+    var Max_Target = Number.MIN_VALUE, Min_Target = Number.MAX_VALUE, Max_Shape = Number.MIN_VALUE, Min_Shape = Number.MAX_VALUE;
     for (var ii = 0; ii < cutsiteTypesLength; ++ii) {
         var cutsiteTypeCutsiteContainer = request.CutsiteTypesCandidateContainer[ii].Cutsites;
         for (var jj = 0; jj < cutsiteTypeCutsiteContainer.length ; ++jj) {
@@ -275,7 +279,31 @@ function EvaluateFitnesses(request) {
                 //This might be inverted. In the end, the closer it is to zero the better. It will always have one sign or the other.
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
                 candidate.Fitness_Target_dG = request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy;
-                candidate.Fitness_AnnealingT = candidate.MeltingTemperature; //We could normalize. (this would mean adding 276 to transform to kelvin, then divide by the biggest one). I feel this is more descriptive and less convoluted
+                candidate.Fitness_AnnealingT = candidate.MeltingTemperature -276; //Reconvert to degrees
+
+                //Find max and min values for normalization
+                if (candidate.Fitness_Target > Max_Target)
+                    Max_Target = candidate.Fitness_Target;
+                if (candidate.Fitness_Target < Min_Target)
+                    Min_Target = candidate.Fitness_Target;
+
+                if (candidate.Fitness_Shape > Max_Shape)
+                    Max_Shape = candidate.Fitness_Shape;
+                if (candidate.Fitness_Shape < Min_Shape)
+                    Min_Shape = candidate.Fitness_Shape;
+            }
+        }
+    }
+    // NORMALIZATION
+    for (var ii = 0; ii < cutsiteTypesLength; ++ii) {
+        var cutsiteTypeCutsiteContainer = request.CutsiteTypesCandidateContainer[ii].Cutsites;
+        for (var jj = 0; jj < cutsiteTypeCutsiteContainer.length ; ++jj) {
+            var cutsite = cutsiteTypeCutsiteContainer[jj];
+            var ConstrainedSFoldStructures = cutsite.ConstrainedSFoldStructures;
+            for (var kk = 0; kk < cutsite.Candidates.length ; ++kk) {
+                //make 1.0 the best and 0.0 the worst. Currently bigger is worst
+                candidate.Fitness_Target = (candidate.Fitness_Target - Min_Target) / Max_Target;
+                candidate.Fitness_Shape = (candidate.Fitness_Shape - Min_Shape) / Max_Shape;
             }
         }
     }

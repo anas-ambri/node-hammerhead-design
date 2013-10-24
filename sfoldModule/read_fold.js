@@ -41,7 +41,7 @@ function (filePath,Structs)
 	    for (var ii = 1; ii < (splited.length - 1) ; ++ii) //1 due to the first line which labels the structure, -1 due to empty line at eof
 	    {
 	        var node = splited[ii].split(' ');
-	        RemoveAllValuesFromArray(node, '');
+	        RemoveAllValuesFromArray(node, '');//remove all empty entries
 	        //Skip non-connection strings
 	        if (node.length != 6)
 	            continue;
