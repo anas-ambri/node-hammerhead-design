@@ -8,7 +8,7 @@ var Model = require('./model/');
 var MeltingTemp = require('./meltingTemp/');
 var Candidate = Model.DomainObjects.Candidate;
 var CutsiteTypeCutsiteContainer = Model.DomainObjects.CutsiteTypeCutsiteContainer;
-var Log = require('log').Log
+var Log = require('./log/').Log;
 //var ReportObject = Model.DomainObjects.ReportObject;
 var path = require('path');
 var FileSeparator = require('path').sep;
@@ -708,6 +708,7 @@ function HandleRequestPart7(reportObj) {
     reportObj.Request.UpdateState("Computing fitness from gathered data..");
     FitnessEvaluationModule.EvaluateFitnesses(request);
 
+    Log("Pareto Front ranking .... " , "HandleRequestPart7", 5);
     request.UpdateState("Pareto front computation started");
     FitnessEvaluationModule.ParetoFrontForRequest(request);
     request.UpdateState("Pareto front computation completed");

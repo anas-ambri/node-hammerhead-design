@@ -2,7 +2,7 @@ var SHOW_ALL = 30;
 var HIDE_ALL = 0;
 
 var config = require('../config/config.json');
-var LOG_LEVEL = config.log_level;  // 0: Only super important stuff
+var LOG_LEVEL = 30;//config.log_level;  // 0: Only super important stuff
                                    // 30: Everything
 
 if(process.env.NODE_ENV === 'test'){
