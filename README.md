@@ -15,7 +15,6 @@ More details soon.
 
 ###NPM###
 One can alternatively just use `npm`:
-
     $ npm install hammerhead-design
 
 ##Configuration##
@@ -32,4 +31,6 @@ The command `npm test` will do.
 
 ##Licence##
 Copyright all rights reserved Dr. Nawwaf Kharma
+
 Contact Dr. Kharma at <a href="mailto:kharma@ece.concordia.ca">kharma@ece.concordia.ca</a>
+
