@@ -29,3 +29,7 @@ These two executables need to be installed on your system. The path to the execu
 
 ##Tests##
 The command `npm test` will do.
+
+##Licence##
+Copyright all rights reserved Dr. Nawwaf Kharma
+Contact Dr. Kharma at <a href="mailto:kharma@ece.concordia.ca">kharma@ece.concordia.ca</a>
