@@ -15,7 +15,6 @@ More details soon.
 
 ###NPM###
 One can alternatively just use `npm`:
-
     $ npm install hammerhead-design
 
 ##Configuration##
@@ -29,3 +28,7 @@ These two executables need to be installed on your system. The path to the execu
 
 ##Tests##
 The command `npm test` will do.
+
+##Licence##
+Copyright all rights reserved Dr. Nawwaf Kharma
+Contact Dr. Kharma at [kharma@ece.concordia.ca](kharma@ece.concordia.ca)
