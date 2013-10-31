@@ -55,7 +55,7 @@ function CreateCandidates (seq, cutSites, options)
 	{
 	    Log("Creating candidates for cutsite location " + cutSites[ii], "CreateCandidates", 10);
 	    var firstCutsiteCands = new Array();
-	    var hasBaseSequence = false; //Keep track if we have a base sequence for the given cutsite
+	    firstCutsiteCands.BaseSequence = ''; //Keep track of the longest base sequence for the given cutsite
 		for(var jj = lamin; jj < lamax; ++jj) //jj is the index of G in GUC
 		{
 		    
@@ -72,9 +72,8 @@ function CreateCandidates (seq, cutSites, options)
 				Log("Candidate end position " + end + ", length: " + length, "CreateCandidates", 20);
 				if (end >= seq.length)
 				    continue;
-				else if (!hasBaseSequence)
+				else if (seq.substr(start, length).length > firstCutsiteCands.BaseSequence.length) //Sequences that are too small fail in BLAST
 				{
-				    hasBaseSequence = true;
 				    firstCutsiteCands.BaseSequence = seq.substr(start, length);
 				    firstCutsiteCands.BaseCutindex = jj + 2;
 				}

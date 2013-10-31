@@ -11,7 +11,7 @@ var CutsiteTypeCutsiteContainer = Model.DomainObjects.CutsiteTypeCutsiteContaine
 var Log = require('./log/').Log;
 //var ReportObject = Model.DomainObjects.ReportObject;
 var path = require('path');
-var Specificity = require('specificity');
+var Specificity = require('./specificity/');
 var FileSeparator = require('path').sep;
 var AddCore = CandidateGenerationModule.AddCore;
 var FitnessEvaluationModule = require('./fitnessEvaluation/');
@@ -680,7 +680,7 @@ function HandleRequestPart6(reportObj) {
 /* ******************************************************************************************************************* */
 function _handleRequestPart7(reportObj) {
     if (reportObj.Request.InVivoOrganism.length != 0) //If in VIVO
-        Specificity.QueryBlast(reportObj);
+        Specificity.QueryBlastForRequest(reportObj);
     else {
         Log("No request sent. No organism specified.", "HandleRequestPart7", 3);
         reportObj.ExecuteIfComplete(8); //Exit and its all

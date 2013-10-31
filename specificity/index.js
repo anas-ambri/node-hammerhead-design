@@ -6,7 +6,7 @@ var Log = require('../log/').Log;
 
 
 
-var TIMEOUT_BETWEEN_CHECKS = 5000; //NOTE: don't decrease this unless you want to be blacklisted by NCBI for abuse
+var TIMEOUT_BETWEEN_CHECKS = 10000; //NOTE: don't decrease this unless you want to be blacklisted by NCBI for abuse
 
 
 
@@ -35,7 +35,7 @@ function QueryBlastForRequest(reportObject) {
         for (var jj = 0; jj < cutsiteType.Cutsites.length; ++jj) {
             primers += '>' + jj + '\n' + cutsiteType.Cutsites[jj].BaseSeq + '\n';
         }
-        QueryBlast(primers, request.InVivoOrganism, new InternalReportObject(request.ID , cutsiteType.Cutsites[jj].ID, reportObject) );
+        QueryBlast(primers, request.InVivoOrganism, new InternalReportObject(request.ID , cutsiteType.Type, reportObject) );
     }
 }
 
@@ -59,6 +59,7 @@ function QueryBlast(blastQueryPrimer, organism, reportObject) {
         'DEFAULT_PROG': 'megaBlast',
         'CMD': 'Put',
         'PROGRAM': 'blastn',
+        'EXPECT': 30,
         'FORMAT_TYPE': 'Text'
     }
 );
@@ -219,10 +220,16 @@ function ParseBlastResults(reportObject)
 }
 
 
-function parseQueries(query, reportObject) {
+function parseQueries(query) {
     var matches = query.split('>');//('&gt;');
-    console.log("Entered query with match number:" + matches.length);
+    if (matches.length >= 2) {
+        if (matches[1].indexOf('No significant similarity found')!=-1) {
+            return [];
+        }
+    }
+    
     matches.splice(0, 1);
+    console.log("Entered query with match number:" + matches.length);
     var res = new Array();
     for (var ii = 0; ii < matches.length; ++ii) {
         var ref = matches[ii].substr(0, matches[ii].indexOf('|', matches[ii].indexOf('|') + 1));
@@ -255,4 +262,4 @@ function parseQueries(query, reportObject) {
     //rl.question('hello', function () { console.log(obj.blastRequestId); console.log(obj2.blastRequestId); fs.writeFile('hello.html', obj.chunk,function () { console.log('file written');}) });
     //rl.question('world', function () { console.log('end');});
 
-    //exports.QueryBlastForRequest = QueryBlastForRequest;
+    exports.QueryBlastForRequest = QueryBlastForRequest;

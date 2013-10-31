@@ -63,8 +63,8 @@ var request = new Request
     },
     'Test', //ID
     0,//CoreType
-    'blah',
-    function (request)
+    'mouse (taxid:10090)', //organism such as = mouse (taxid:10090)
+    function (request) //callback
     {
 
         console.log('State: ' + request.Part + ';' + request.PartProgress + '%');
