@@ -11,6 +11,7 @@ var CutsiteTypeCutsiteContainer = Model.DomainObjects.CutsiteTypeCutsiteContaine
 var Log = require('./log/').Log;
 //var ReportObject = Model.DomainObjects.ReportObject;
 var path = require('path');
+var Specificity = require('specificity');
 var FileSeparator = require('path').sep;
 var AddCore = CandidateGenerationModule.AddCore;
 var FitnessEvaluationModule = require('./fitnessEvaluation/');
@@ -104,6 +105,11 @@ ReportObject.prototype.ExecuteIfComplete = function (part)
                 HandleRequestPart7(this);
                 break;
             case 7:
+                this.Request.UpdateState('Completed specificity check');
+                Log('Completed specificity check', 'ReportObject.ExecuteIfComplete', 3);
+                this.Request.ResetAndSignalProgress(8);
+                HandleRequestPart8(this);
+            case 8:
                 Log('All main folding complete', 'ReportObject.ExecuteIfComplete', 3);
                 this.Request.Completed = true;
                 this.Request.PartProgress = 100;
@@ -211,30 +217,7 @@ function EstimateTime(request) {
 	return armL * armR * count / 100 * 60;
 }
 
-//Request
-// {
-//	prefs
-//	{
-//		tempEnv,
-//		naEnv,
-//		mgEnv,
-//		oligoEnv,
-//		cutsites,
-//		promoter	
-//	}
-//  CutsiteTypesCandidateContainer : array
-//    {
-//        element : array (CutsiteType with Cutsites)
-//        {
-//            Type : string
-//            element : object (Cutsite with candidates)
-//            {
-//                Candidates: array (Candidates),
-//                ID : string
-//           }
-//        }
-//    }
-//	
+
 
 /* ******************************************************************************************************************* */
 /* ******************************************************************************************************************* */
@@ -370,7 +353,10 @@ function _handleRequestPart1(request)
                 {
                     'Candidates' : candidates,
                     'ID': generatedCutsiteId,
-                    'Location': locationOnTarget
+                    'Location': locationOnTarget,
+                    'BaseSeq': cutsiteCandidates.BaseSequence,
+                    'BaseCutindex': cutsiteCandidates.BaseCutindex,
+                    'SpecificityFitness' : -1
                 }
             );
 
@@ -684,6 +670,7 @@ function HandleRequestPart6(reportObj) {
     setTimeout(function () { _handleRequestPart6(reportObject); }, 4000); // execute async
 }
 
+
 /* ******************************************************************************************************************* */
 /* ******************************************************************************************************************* */
 /* ******************************************************************************************************************* */
@@ -692,9 +679,12 @@ function HandleRequestPart6(reportObj) {
 /* ******************************************************************************************************************* */
 /* ******************************************************************************************************************* */
 function _handleRequestPart7(reportObj) {
-    var request = reportObj.Request;
-
-    reportObj.ExecuteIfComplete(7);
+    if (reportObj.Request.InVivoOrganism.length != 0) //If in VIVO
+        Specificity.QueryBlast(reportObj);
+    else {
+        Log("No request sent. No organism specified.", "HandleRequestPart7", 3);
+        reportObj.ExecuteIfComplete(8); //Exit and its all
+    }
 }
 
 /*
@@ -703,12 +693,36 @@ function _handleRequestPart7(reportObj) {
 function HandleRequestPart7(reportObj) {
     var request = reportObj.Request;
     Log("Entered part 7 for " + request.ID, "HandleRequestPart7", 3);
+
+    Log("Sending blast query....", "HandleRequestPart7", 3);
+    var reportObject = new ReportObject(request);
+    setTimeout(function () { _handleRequestPart7(reportObject); }, 4000); // execute async
+
+
+}
+
+/* ******************************************************************************************************************* */
+/* ******************************************************************************************************************* */
+/* ******************************************************************************************************************* */
+/* *****************************************************  Part 8 ***************************************************** */
+/* ******************************************************************************************************************* */
+/* ******************************************************************************************************************* */
+/* ******************************************************************************************************************* */
+
+
+/*
+    Computes fitness from all gathered data, compresses object and saves it into a file
+*/
+function HandleRequestPart8(reportObj)
+{
+    var request = reportObj.Request;
+    Log("Entered part 8 for " + request.ID, "HandleRequestPart8", 3);
     
-    Log("Computing fitness from gathered data..", "HandleRequestPart7", 3);
+    Log("Computing fitness from gathered data..", "HandleRequestPart8", 3);
     reportObj.Request.UpdateState("Computing fitness from gathered data..");
     FitnessEvaluationModule.EvaluateFitnesses(request);
 
-    Log("Pareto Front ranking .... " , "HandleRequestPart7", 5);
+    Log("Pareto Front ranking .... " , "HandleRequestPart8", 5);
     request.UpdateState("Pareto front computation started");
     FitnessEvaluationModule.ParetoFrontForRequest(request);
     request.UpdateState("Pareto front computation completed");
@@ -750,18 +764,24 @@ function HandleRequestPart7(reportObj) {
         CompressStructureInfo(request.SFoldStructures[ii]);
     AlgorithmUtilities.CompressObjectArrayIntoTable(request.SFoldStructures, ["EnergyInterval", "Frequency", "LowestFreeEnergy", "ConnectedPairs"]);
     SaveRequest(request);
-    Log("Compressed and saved request " + request.ID, "HandleRequestPart7", 3);
+    Log("Compressed and saved request " + request.ID, "HandleRequestPart8", 3);
 
     
     var endtime = AlgorithmUtilities.ElapsedTime('Request Ended');
-    Log(endtime, 'HandleRequestPart7', 0);
+    Log(endtime, 'HandleRequestPart8', 0);
     request.UpdateState(endtime);
 
     var reportObject = new ReportObject(request);
-    reportObj.ExecuteIfComplete(7);
+    reportObj.ExecuteIfComplete(8);
 
 }
 
 
-exports.HandleRequestPart1 = HandleRequestPart1;
+exports.HandleRequestPart1 = HandleRequestPart1; //Create candidates and clense according to Melting T
 exports.HandleRequestPart2 = HandleRequestPart2;
+exports.HandleRequestPart3 = HandleRequestPart3;
+exports.HandleRequestPart4 = HandleRequestPart4;
+exports.HandleRequestPart5 = HandleRequestPart5;
+exports.HandleRequestPart6 = HandleRequestPart6;
+exports.HandleRequestPart7 = HandleRequestPart7;
+exports.HandleRequestPart8 = HandleRequestPart8;

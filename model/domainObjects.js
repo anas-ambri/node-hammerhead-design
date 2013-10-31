@@ -21,18 +21,18 @@ function MeltingTCalcRouter(str, prefs)
             {'left':4,'right':-1,'type':'U'},
             {'left':5,'right':-1,'type':'G'},
             {'left':6,'right':-1,'type':'A'},//End not Connected
-            {'left':7,'right':18,'type':'G'},
+            {'left':7,'right':18,'type':'G'},//Connected
             {'left':8,'right':17,'type':'U'},
             {'left':9,'right':16,'type':'C'},
-            {'left':10,'right':15,'type':'C'},
+            {'left':10,'right':15,'type':'C'}, //End connected
             {'left':11,'right':-1,'type':'G'}, //Not connected
             {'left':12,'right':-1,'type':'U'},
             {'left':13,'right':-1,'type':'G'},
             {'left':14,'right':-1,'type':'A'}, //End not connected
-            {'left':15,'right':10,'type':'G'},
+            {'left':15,'right':10,'type':'G'}, //Connected
             {'left':16,'right':9,'type':'G'},
             {'left':17,'right':8,'type':'A'},
-            {'left':18,'right':7,'type':'C'},
+            {'left':18,'right':7,'type':'C'}, //End not connected
             {'left':19,'right':-1,'type':'G'},//Connected
             {'left':20,'right':-1,'type':'A'},
             {'left':21,'right':-1,'type':'A'} //End not connected
@@ -47,12 +47,12 @@ function MeltingTCalcRouter(str, prefs)
             {'left':0,'right':11,'type':'G'},
             {'left':1,'right':10,'type':'U'},
             {'left':2,'right':9,'type':'C'},
-            {'left':3,'right':8,'type':'C'},
+            {'left':3,'right':8,'type':'C'}, //End connected
             {'left':4,'right':-1,'type':'G'}, //Not connected
             {'left':5,'right':-1,'type':'U'},
             {'left':6,'right':-1,'type':'G'},
             {'left':7,'right':-1,'type':'A'}, //End not connected
-            {'left':8,'right':3,'type':'G'},
+            {'left':8,'right':3,'type':'G'}, //Connected
             {'left':9,'right':2,'type':'G'},
             {'left':10,'right':1,'type':'A'},
             {'left':11,'right':0,'type':'C'}
@@ -61,7 +61,7 @@ function MeltingTCalcRouter(str, prefs)
     ];
 
 
-    function Request ( targetSequence , accessionNumber, preferences , Id , coreTypeId, promoter, callback)
+    function Request ( targetSequence , accessionNumber, preferences , Id , coreTypeId, inVivoOrganism ,callback)
     {
         this.ID = Id;
         this.TargetSequence = targetSequence;
@@ -69,10 +69,10 @@ function MeltingTCalcRouter(str, prefs)
         this.Preferences = preferences;
         this.Completed = false;
         this.coreTypeId = coreTypeId;
-        this.Promoter = coreTypeId;
         this.State = '\n';
         this.Callback = callback;
         this.ErrorContainer = new Array();
+        this.InVivoOrganism = inVivoOrganism;
         this.Part = 0;
         this.PartProgress = 0;
         //Completed 1 => Candidate Generation
