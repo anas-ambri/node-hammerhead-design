@@ -1,6 +1,6 @@
 {
   "name": "hammerhead-design",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Set of tools to design Hammerhead Ribozymes",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "design"
   ],
   "author": "Gabriel K. Belmonte",
-  "license": "All Rights reserved Dr. Nawwaf Kharma (http://drkharma.com)",
+  "license": "BSD",
   "readmeFilename": "README.md",
   "gitHead": "bd79c03a6a167742b37632a013a7f0da38f6fc74"
 }
