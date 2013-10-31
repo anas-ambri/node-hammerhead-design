@@ -104,14 +104,14 @@ ReportObject.prototype.ExecuteIfComplete = function (part)
                 this.Request.ResetAndSignalProgress(7);
                 HandleRequestPart7(this);
                 break;
-            case 7:
+            case 7: //http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Get&RID=75M5HJHC015&FORMAT_TYPE=Text
                 this.Request.UpdateState('Completed specificity check');
                 Log('Completed specificity check', 'ReportObject.ExecuteIfComplete', 3);
                 this.Request.Callback(this.Request);
                 this.Request.ResetAndSignalProgress(8);
                 HandleRequestPart8(this);
             case 8:
-                Log('All Completed, 'ReportObject.ExecuteIfComplete', 3);
+                Log('All Completed' , 'ReportObject.ExecuteIfComplete', 3);
                 this.Request.Completed = true;
                 this.Request.PartProgress = 100;
                 this.Request.Callback(this.Request);
