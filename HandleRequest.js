@@ -107,10 +107,11 @@ ReportObject.prototype.ExecuteIfComplete = function (part)
             case 7:
                 this.Request.UpdateState('Completed specificity check');
                 Log('Completed specificity check', 'ReportObject.ExecuteIfComplete', 3);
+                this.Request.Callback(this.Request);
                 this.Request.ResetAndSignalProgress(8);
                 HandleRequestPart8(this);
             case 8:
-                Log('All main folding complete', 'ReportObject.ExecuteIfComplete', 3);
+                Log('All Completed, 'ReportObject.ExecuteIfComplete', 3);
                 this.Request.Completed = true;
                 this.Request.PartProgress = 100;
                 this.Request.Callback(this.Request);
@@ -308,7 +309,8 @@ function _handleRequestPart1(request)
 		candidateCountRaw = CountCandidatesFromRaw(rawCandidatesPerCutsite);
 		numberOfCandidatesGeneratedAndCleansed += candidateCountRaw; //Keep count of total generated candidates after cleansing
 	    //Add promoter to candidate
-		rawCandidatesPerCutsite = CandidateGenerationModule.AppendPromoterToMany(rawCandidatesPerCutsite, request.Preferences.promoter, 3);//The 3 is the amount that the promoter we use allows to be identical (e.g. if the promoter is GUGGC and the candidate is ABDDGU , then we can recycle the DGU, but only GU is equal so only GU)
+        if(request.Preferences.promoter != undefined && request.Preferences.promoter.length >0 )
+		    rawCandidatesPerCutsite = CandidateGenerationModule.AppendPromoterToMany(rawCandidatesPerCutsite, request.Preferences.promoter, 3);//The 3 is the amount that the promoter we use allows to be identical (e.g. if the promoter is GUGGC and the candidate is ABDDGU , then we can recycle the DGU, but only GU is equal so only GU)
 		logString = "Melting temperature computed. New number of candidates is " + candidateCountRaw + " after removing unfit candidates for cutsite type " + cutsiteTypeCutsiteContainer.Type;
 		request.UpdateState(logString);
 		Log(logString, "HandleRequestPart1", 1);

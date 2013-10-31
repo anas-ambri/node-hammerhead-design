@@ -62,7 +62,7 @@ var request = new Request
         'right_arm_min': 5,
         'left_arm_max':8,
         'right_arm_max':8
-
+        //'promoter':'TAATACGACTCACTATAGGG',
     },
     'Test', //ID
     0,//CoreType
@@ -71,9 +71,9 @@ var request = new Request
     {
 
         console.log('State: ' + request.Part + ';' + request.PartProgress + '%');
-        if (request.Part == 7)
+        if (request.Part == 8)
             console.log(request.State);
-    }//Promoter : Disabled due to change in algorithm sequence (e.g. non-annealing ones are removed earlier on)
+    }
     );
    
 
