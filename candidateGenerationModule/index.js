@@ -54,7 +54,8 @@ function CreateCandidates (seq, cutSites, options)
 	for(var ii = 0 ; ii < cutSites.length;++ii)
 	{
 	    Log("Creating candidates for cutsite location " + cutSites[ii], "CreateCandidates", 10);
-		var firstCutsiteCands = new Array();
+	    var firstCutsiteCands = new Array();
+	    firstCutsiteCands.BaseSequence = ''; //Keep track of the longest base sequence for the given cutsite
 		for(var jj = lamin; jj < lamax; ++jj) //jj is the index of G in GUC
 		{
 		    
@@ -70,7 +71,13 @@ function CreateCandidates (seq, cutSites, options)
 				var length = end - start;
 				Log("Candidate end position " + end + ", length: " + length, "CreateCandidates", 20);
 				if (end >= seq.length)
-					continue;
+				    continue;
+				else if (seq.substr(start, length).length > firstCutsiteCands.BaseSequence.length) //Sequences that are too small fail in BLAST
+				{
+				    firstCutsiteCands.BaseSequence = seq.substr(start, length);
+				    firstCutsiteCands.BaseCutindex = jj + 2;
+				}
+
 				var candidateSequence = ReverseComplement(seq.substr(start,length));
 				var candidateULocation = candidateSequence.length - (jj+2) - 1; //jj +2  is the index of C in GUC, this transforms it into the index of U in the reverse complement
 				firstCutsiteCands.push({"seq" : candidateSequence, "cut":candidateULocation, "targetLocation" :cutSites[ii], 'left':jj,'right':kk});	
