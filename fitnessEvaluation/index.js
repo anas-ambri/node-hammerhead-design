@@ -280,7 +280,7 @@ function EvaluateFitnesses(request) {
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
                 candidate.Fitness_Target_dG = request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy;
                 candidate.Fitness_AnnealingT = candidate.MeltingTemperature -276; //Reconvert to degrees
-
+                candidate.Fitness_Specificity = cutsite.SpecificityFitness;
                 //Find max and min values for normalization
                 if (candidate.Fitness_Target > Max_Target)
                     Max_Target = candidate.Fitness_Target;

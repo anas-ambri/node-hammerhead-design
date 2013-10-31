@@ -10,7 +10,7 @@ function CleanseCandidates(rawCandidatesPerCutsite,prefs)
         var cutsiteCandidates = rawCandidatesPerCutsite[ii];
         var cleansed = new Array();
         cleansed.BaseSequence = cutsiteCandidates.BaseSequence;
-        cleansed.Base = cutsiteCandidates.BaseCutindex;
+        cleansed.BaseCutindex = cutsiteCandidates.BaseCutindex;
 
         for (var jj = 0; jj < cutsiteCandidates.length ; ++jj)
         {

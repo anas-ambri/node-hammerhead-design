@@ -356,7 +356,8 @@ function _handleRequestPart1(request)
                     'Location': locationOnTarget,
                     'BaseSeq': cutsiteCandidates.BaseSequence,
                     'BaseCutindex': cutsiteCandidates.BaseCutindex,
-                    'SpecificityFitness' : -1
+                    'SpecificityFitness': -1,
+                    'OfftargetLocations':[]
                 }
             );
 
@@ -777,11 +778,11 @@ function HandleRequestPart8(reportObj)
 }
 
 
-exports.HandleRequestPart1 = HandleRequestPart1; //Create candidates and clense according to Melting T
-exports.HandleRequestPart2 = HandleRequestPart2;
-exports.HandleRequestPart3 = HandleRequestPart3;
-exports.HandleRequestPart4 = HandleRequestPart4;
-exports.HandleRequestPart5 = HandleRequestPart5;
-exports.HandleRequestPart6 = HandleRequestPart6;
-exports.HandleRequestPart7 = HandleRequestPart7;
-exports.HandleRequestPart8 = HandleRequestPart8;
+exports.HandleRequestPart1 = HandleRequestPart1; //Create candidates and clense according to Melting T and queues candidates folds
+exports.HandleRequestPart2 = HandleRequestPart2; //Reads folding for candidates
+exports.HandleRequestPart3 = HandleRequestPart3; //Evaluates fitness for candidate folding and queues Target folding
+exports.HandleRequestPart4 = HandleRequestPart4; //Parses constrained folding
+exports.HandleRequestPart5 = HandleRequestPart5; //Queues unconstrained target folding
+exports.HandleRequestPart6 = HandleRequestPart6; //Parses unconstrainted target folding
+exports.HandleRequestPart7 = HandleRequestPart7; //Puts query blast for cutsites and parses results
+exports.HandleRequestPart8 = HandleRequestPart8; //Figures fitnesses from gathered data, computes pareto front, compresses data, sends

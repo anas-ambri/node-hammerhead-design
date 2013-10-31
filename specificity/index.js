@@ -3,7 +3,7 @@ var querystring = require('querystring');
 var http = require('http');
 var fs = require('fs');
 var Log = require('../log/').Log;
-
+var RnaToDna = require('../AlgorithmUtilities.js').RnaToDna;
 
 
 var TIMEOUT_BETWEEN_CHECKS = 10000; //NOTE: don't decrease this unless you want to be blacklisted by NCBI for abuse
@@ -16,12 +16,13 @@ var TIMEOUT_BETWEEN_CHECKS = 10000; //NOTE: don't decrease this unless you want 
 /**
 
 */
-function InternalReportObject(ID,cutsiteID, reportObject)
+function InternalReportObject(ID,cutsiteID,primers, reportObject)
 {
     this.ID = ID;
     this.Parent = reportObject;
     this.cutsiteID = cutsiteID;
     this.blastRequestId = '';
+    this.Primers = primers;
 }
 
 function QueryBlastForRequest(reportObject) {
@@ -33,9 +34,9 @@ function QueryBlastForRequest(reportObject) {
         reportObject.AddToExecutionCount(1);
         var cutsiteType = request.CutsiteTypesCandidateContainer[ii];
         for (var jj = 0; jj < cutsiteType.Cutsites.length; ++jj) {
-            primers += '>' + jj + '\n' + cutsiteType.Cutsites[jj].BaseSeq + '\n';
+            primers += '>' + jj + '    \n' + cutsiteType.Cutsites[jj].BaseSeq + '     \n';
         }
-        QueryBlast(primers, request.InVivoOrganism, new InternalReportObject(request.ID , cutsiteType.Type, reportObject) );
+        QueryBlast(primers, request.InVivoOrganism, new InternalReportObject(request.ID , cutsiteType.Type, primers,reportObject) );
     }
 }
 
@@ -59,7 +60,7 @@ function QueryBlast(blastQueryPrimer, organism, reportObject) {
         'DEFAULT_PROG': 'megaBlast',
         'CMD': 'Put',
         'PROGRAM': 'blastn',
-        'EXPECT': 30,
+        'EXPECT': 80,
         'FORMAT_TYPE': 'Text'
     }
 );
@@ -87,7 +88,7 @@ function QueryBlast(blastQueryPrimer, organism, reportObject) {
                 function QueryBlastDataReceived(chunk)//WARNING. this will be called more than one time with multiple chunks we have to put 
                 //into a buffer until all chuncks are received
                 {
-                    Log("ResponseChunk Received for " +reportObject.ID, "QueryBlast", 12);
+                    Log("Response Chunk Received for " +reportObject.ID, "QueryBlast", 12);
 
                     reportObject.blastRequestId += chunk;
                     if (chunk.indexOf('</html>') != -1)//once completed receiving chunks, find the request id
@@ -102,14 +103,16 @@ function QueryBlast(blastQueryPrimer, organism, reportObject) {
                         if (begInd == -1)
                         {
                             reportObject.blastRequestId = 'ERROR: RID not returned!';
-                            return;
+                            reportObject.chunk = 'ERROR: RID not returned!';
+                            ParseBlastResults(reportObject);
                         }
                         endInd = final.indexOf('"', begInd + 7);
                         reportObject.blastRequestId = final.substr(begInd + 7, endInd - begInd - 7);//The 7 is the length of the 'value=' string + 1
 
                         if (reportObject.blastRequestId.length == 0) {
                             reportObject.blastRequestId = 'ERROR: RID not returned!';
-                            return;
+                            reportObject.chunk = 'ERROR: RID not returned!';
+                            ParseBlastResults(reportObject);
                         }
                         Log("Final RID received for " + reportObject.ID + ":" + reportObject.blastRequestId, "QueryBlast", 6);
                         setTimeout(CheckResults, 3000, [reportObject]);//BLAST usage guidelines require > 3 seconds per query > 1 min to check on a query 
@@ -212,10 +215,49 @@ function ParseBlastResults(reportObject)
 
     var queries = chunk.split('Query=');
     queries.splice(0, 1);
+
+
+    //Find the right cutsite array
+    var cutsites = null;
+    var req = reportObject.Parent.Request
+    var cutsiteType = '';
+    for (var ii = 0; ii < req.CutsiteTypesCandidateContainer.length; ++ii) {
+        var cutsiteType = req.CutsiteTypesCandidateContainer[ii];
+        if (cutsiteType.Type == reportObject.cutsiteID) {
+            cutsites = cutsiteType.Cutsites;
+            cutsiteType = cutsiteType.Type;
+            break;
+        }
+    }
+
+    //Parse individual queries
     for (var ii = 0; ii < queries.length; ++ii) {
         console.log('query ' + ii);
         var MatchArray = parseQueries(queries[ii]);
+        var cutsite = cutsites[MatchArray.index];//If the index of Query is not there then it has no matches
+        cutsite.SpecificityFitness = 0;
+        for (var jj = 0; jj < MatchArray.length; ++jj)
+        {
+            var match = MatchArray[jj];
+            var cutsite_is = match.s.substr(cutsite.BaseCutindex - match.i - 2, 3);
+            if (cutsite_is == RnaToDna(cutsiteType)) //The cutsite is there
+                cutsite.OfftargetLocations.push(match.r + ',' + match.p+',@'+match.si);
+            else
+                continue; //The cutsite is not matched. Go to the next match
+            //Weight it by how much of a match it is
+            cutsite.SpecificityFitness += parseInt(match.p.split('(')[1]) / 100;
+        }
     }
+    //For those that returned no matches, they might be completely omitted from the respose. Set them to 0 to indicate that
+    for (var ii = 0; ii < cutsites.length; ++ii)
+    {
+        if (cutsites[ii].SpecificityFitness == -1)
+        cutsites[ii].SpecificityFitness = 0;
+    }
+
+
+    reportObject.Parent.FileCount = reportObject.Parent.FileCount - 1;
+    reportObject.Parent.ExecuteIfComplete(7);
     
 }
 
@@ -228,19 +270,32 @@ function parseQueries(query) {
         }
     }
     
-    matches.splice(0, 1);
+    var queryNum = matches.splice(0, 1);
+    queryNum = parseInt(queryNum[0].split('\n')[0]);
     console.log("Entered query with match number:" + matches.length);
     var res = new Array();
+    //Extract relevant information for the match
     for (var ii = 0; ii < matches.length; ++ii) {
         var ref = matches[ii].substr(0, matches[ii].indexOf('|', matches[ii].indexOf('|') + 1));
         var begInd = matches[ii].indexOf('Identities') + 13;
         var percent = matches[ii].substr(begInd, matches[ii].indexOf(',', begInd) - begInd);
+
         begInd = matches[ii].indexOf('Sbjct') + 5;
         var subject = matches[ii].substr(begInd, matches[ii].indexOf('\n', begInd) - begInd);
         var subject = subject.split(' ')[4];
-        res.push(ref + ';' + percent + ';' + subject + ';');
-          console.log('ref=' + ref + ';' + 'Per=' + percent + ';' + 'subject=' + subject + ';');
+
+        begInd = matches[ii].indexOf('Query') + 5;
+        var matchIndex = matches[ii].substr(begInd, matches[ii].indexOf('\n', begInd) - begInd);//This is the first matched index of the query
+        matchIndex = parseInt(matchIndex.split(' ')[2]) - 1; //We need this to find where the expected GUC will be on the sbjt
+
+        begInd = matches[ii].indexOf('Sbjct') + 5;
+        var subjIndex = matches[ii].substr(begInd, matches[ii].indexOf('\n', begInd) - begInd);//This is the first matched index of the query
+        subjIndex = parseInt(subjIndex.split(' ')[2]) - 1; //We need this to find where the expected GUC will be on the sbjt
+
+        res.push({ 'r': ref, 'p': percent, 's': subject, 'i': matchIndex, 'si': subjIndex });
+       // console.log('ref=' + ref + ';' + 'Per=' + percent + ';' + 'subject=' + subject + ';'+'in='+matchIndex);
     }
+    res.index = queryNum;
     return res;
 }
 
