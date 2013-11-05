@@ -8,7 +8,7 @@ var RnaToDna = require('../AlgorithmUtilities.js').RnaToDna;
 
 var TIMEOUT_BETWEEN_CHECKS = 10000; //NOTE: don't decrease this unless you want to be blacklisted by NCBI for abuse
 
-
+var SENSITIVITY = 100;
 
 
 //***************************************** NOTE *****************************************
@@ -60,7 +60,7 @@ function QueryBlast(blastQueryPrimer, organism, reportObject) {
         'DEFAULT_PROG': 'megaBlast',
         'CMD': 'Put',
         'PROGRAM': 'blastn',
-        'EXPECT': 80,
+        'EXPECT': SENSITIVITY,
         'FORMAT_TYPE': 'Text'
     }
 );
@@ -265,8 +265,12 @@ function ParseBlastResults(reportObject)
 function parseQueries(query) {
     var matches = query.split('>');//('&gt;');
     if (matches.length >= 2) {
-        if (matches[1].indexOf('No significant similarity found')!=-1) {
-            return [];
+        if (matches[1].indexOf('No significant similarity found') != -1) {
+            var queryNum = matches.splice(0, 1);
+            queryNum = parseInt(queryNum[0].split('\n')[0]);
+            var res = new Array();
+            res.index = queryNum;
+            return res;
         }
     }
     
