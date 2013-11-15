@@ -211,11 +211,12 @@ function EstimateTime(request) {
     var count = 0;
     for (var ii = 0; ii < possibleCutsitesTypes.length; ++ii)
     {
-        count += CandidateGenerationModule.FindCutsites(request.TargetSequence, possibleCutsitesTypes[ii]).length;
+        count += CandidateGenerationModule.FindCutsites(AlgorithmUtilities.DnaToRna(request.TargetSequence), possibleCutsitesTypes[ii]).length;
     }
     var armL = request.Preferences.left_arm_max - request.Preferences.left_arm_min;
-	var armR = request.Preferences.right_arm_max- request.Preferences.right_arm_min;
-	return armL * armR * count / 100 * 60;
+    var armR = request.Preferences.right_arm_max - request.Preferences.right_arm_min;
+    var est = armL * armR * count / 100 * 60
+	return est;
 }
 
 
