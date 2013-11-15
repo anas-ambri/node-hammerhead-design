@@ -16,8 +16,6 @@ var FileSeparator = require('path').sep;
 var AddCore = CandidateGenerationModule.AddCore;
 var FitnessEvaluationModule = require('./fitnessEvaluation/');
 var AlgorithmUtilities = require('./AlgorithmUtilities.js');
-var TEST_COMPRESSION = false;
-
 
 
 function ReportObject(request)
@@ -729,12 +727,12 @@ function HandleRequestPart8(reportObj)
     request.UpdateState("Pareto front computation started");
     FitnessEvaluationModule.ParetoFrontForRequest(request);
     request.UpdateState("Pareto front computation completed");
-    if (TEST_COMPRESSION)
-    {
-        var str = JSON.stringify(request);
-        var fs = require('fs');
-        fs.writeFileSync(path.join(request.ID, 'requestStateUncompressed.json'), str);
-    }
+
+    //Writing uncompressed data
+    var str = JSON.stringify(request);
+    var fs = require('fs');
+    fs.writeFileSync(path.join(process.cwd(), request.ID, 'requestStateUncompressed.json'), str);
+
     reportObj.Request.UpdateState('Compressing results');
     for (var ii = 0; ii < request.CutsiteTypesCandidateContainer.length; ++ii)
     {
