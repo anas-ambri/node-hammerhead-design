@@ -203,6 +203,12 @@ function VerifyParameters(request)
         request.UpdateState("Negative magnesium concentration is not allowed!");
         allOk = false;
     }
+
+    if (request.coreTypeId < 0 || request.coreTypeId > 1)
+    {
+        request.UpdateState("ID of core type provided is not recognized");
+        allOk = false;
+    }
     return allOk;
 }
 
