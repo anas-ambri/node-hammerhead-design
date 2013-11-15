@@ -1,6 +1,6 @@
 {
   "name": "hammerhead-design",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Set of tools to design Hammerhead Ribozymes",
   "main": "index.js",
   "scripts": {
