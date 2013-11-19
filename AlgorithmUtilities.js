@@ -214,6 +214,21 @@ function CompressCandidates(candidates) {
 }
 
 
+var deleteFolderRecursive = function (path) {
+    var fs = require('fs');
+    if (fs.existsSync(path)) {
+        fs.readdirSync(path).forEach(function (file, index) {
+            var curPath = path + "/" + file;
+            if (fs.statSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else { // delete file
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+};
+
 
 exports.SequenceLength = SequenceLength;
 exports.ReverseComplement = ReverseComplement;
@@ -225,3 +240,4 @@ exports.ElapsedTime = elapsed_time;
 exports.CompressStructureInfo = CompressStructureInfo;
 exports.CompressObjectArrayIntoTable = CompressObjectArrayIntoTable;
 exports.CompressCandidates = CompressCandidates;
+exports.DeleteFolderRecursive = deleteFolderRecursive;
