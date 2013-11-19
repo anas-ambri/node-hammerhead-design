@@ -263,6 +263,7 @@ function _handleRequestPart1(request)
 
     //Make directory for request
     var fs = require('fs');
+    AlgorithmUtilities.DeleteFolderRecursive(request.ID);
     fs.mkdirSync(request.ID);
 
 
@@ -609,6 +610,8 @@ function _handleRequestPart5(reportObj) {
     var targetSeqFile = request.ID + '/Target.seq';
     fs.writeFileSync(targetSeqFile, '> File for target sequence\n' + request.TargetSequence);
     var resultDir = request.ID + '/Target';
+    AlgorithmUtilities.DeleteFolderRecursive(resultDir);
+
     fs.mkdirSync(resultDir);
     reportObj.AddToExecutionCount(1);
     SFold(targetSeqFile, resultDir, reportObj, null, 5);
@@ -793,3 +796,4 @@ exports.HandleRequestPart5 = HandleRequestPart5; //Queues unconstrained target f
 exports.HandleRequestPart6 = HandleRequestPart6; //Parses unconstrainted target folding
 exports.HandleRequestPart7 = HandleRequestPart7; //Puts query blast for cutsites and parses results
 exports.HandleRequestPart8 = HandleRequestPart8; //Figures fitnesses from gathered data, computes pareto front, compresses data, sends
+exports.ReportObject = ReportObject;

@@ -1,6 +1,7 @@
 var Log = require('./../log/').Log;
 
 var config = require('../config/config.json');
+var AlgorithmUtilities = require('../AlgorithmUtilities.js');
 var sfold_path = config.env.sfold_path;
 var unafold_path = config.env.unafold_path;
 
@@ -115,6 +116,8 @@ Fold.ExecuteFolding = function(candidate, constraints, reportObj, target )
         var seqFile = candidate.requestID + '/' + candidate.cutsiteID + '/' + candidate.ID + '.seq';
         fs.writeFileSync(seqFile, '> File for  ' + candidate.ID + '\n' + candidate.sequence);
         var newDir = candidate.requestID + '/' + candidate.cutsiteID + '/' + candidate.ID;
+
+        AlgorithmUtilities.DeleteFolderRecursive(newDir);
         fs.mkdirSync(newDir);
         Fold.SFold(seqFile, newDir, reportObj,null, 1);
         Log('Completed sending fold request of candidate ' + candidate.ID, 'Fold.ExecuteFolding', 6);
@@ -128,6 +131,7 @@ Fold.ExecuteFolding = function(candidate, constraints, reportObj, target )
         fs.writeFileSync(seqFile, '> File for  ' + candidate.ID + '\n' + candidate.sequence);
         fs.writeFileSync(constraintFile, 'P ' + constraints.left + ' 0 ' + constraints.right);
         var newDir = candidate.requestID + '/' + candidate.cutsiteID + '/' + candidate.ID;
+        AlgorithmUtilities.DeleteFolderRecursive(newDir);
         fs.mkdirSync(newDir);
         Fold.SFold(seqFile, newDir, reportObj, constraintFile,3);
         Log('Completed sending fold of target with open cusite ' + candidate.cutsiteID, 'Fold.ExecuteFolding', 6);
@@ -146,7 +150,9 @@ Fold.FoldCandidates = function ( cutSite , candidateArray, reportObj)
 {
 	Log('Folding request being sent for candidates for cutSite ' + cutSite.ID, 'Fold.FoldCandidates',5);
     var fs = require('fs');
-	var newDir = cutSite.requestID+'/'+cutSite.ID ;
+    var newDir = cutSite.requestID + '/' + cutSite.ID;
+    AlgorithmUtilities.DeleteFolderRecursive(newDir);
+
 	fs.mkdirSync(newDir)
     //We need to wait untill all the candidates are folded
 	reportObj.AddToExecutionCount (candidateArray.length );
