@@ -53,7 +53,7 @@ Fold.SFold = function( sequenceFile, targetFolder , reportObj ,constraintFile , 
                     Log("Could not call sfold with " + sequenceFile + "," + targetFolder + "constraintFile", "ERROR Fold.SFold", 0);
                     Log("stdout sfold :" + command + ": " + stdout, "SFold", 3);
                     Log("stderr sfold :" + command + ": " + stderr, "SFold", 0);
-                    var request = reportObj.request; //Using reportObj from parent scope can cause race-condition if context switches. e.g. another request gets here
+                    var request = reportObj.Request; //Using reportObj from parent scope can cause race-condition if context switches. e.g. another request gets here
                     request.ErrorContainer.push(error);
                     if (request.Completed != true) //only on first erroneous callback
                     {
