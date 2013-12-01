@@ -481,7 +481,8 @@ function _handleRequestPart3(reportObject)
                     {
                         'requestID':request.ID,
                         'cutsiteID': cutsite.ID,
-                        'ID':'Target'
+                        'ID': 'Target',
+                        'sequence':request.TargetSequence
                     }
                 );
             var constraint = { 'left': cutsite.Location - (request.Preferences.left_arm_max - 1), 'right': (request.Preferences.right_arm_max + request.Preferences.left_arm_max + 2) };
@@ -694,7 +695,7 @@ function _handleRequestPart7(reportObj) {
         Specificity.QueryBlastForRequest(reportObj);
     else {
         Log("No request sent. No organism specified.", "HandleRequestPart7", 3);
-        reportObj.ExecuteIfComplete(8); //Exit and its all
+        reportObj.ExecuteIfComplete(7); //Exit and its all
     }
 }
 
@@ -738,6 +739,19 @@ function HandleRequestPart8(reportObj)
     FitnessEvaluationModule.ParetoFrontForRequest(request);
     request.UpdateState("Pareto front computation completed");
 
+    for (var ii = 0 ; ii < request.CutsiteTypesCandidateContainer.length; ++ii) {
+        var cutsiteType = request.CutsiteTypesCandidateContainer[ii];
+        
+        for (var jj = 0 ; jj < cutsiteType.Cutsites.length; ++jj) {
+            var cutsite = cutsiteType.Cutsites[jj];
+            
+            for (var kk = 0; kk < cutsite.Candidates.length; ++kk) {
+                var cand = cutsite.Candidates[kk];
+                console.log(cand.rank);
+            }
+        }
+
+    }
     //Writing uncompressed data
     var str = JSON.stringify(request);
     var fs = require('fs');
