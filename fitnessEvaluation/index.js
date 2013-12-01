@@ -143,7 +143,7 @@ function ParetoFrontForRequest(request)
     }
     ParetoFrontRank(allEle,
     ["Fitness_Shape", "Fitness_Target", "Fitness_Target_dG", "Fitness_Specificity", "MeltingTemperature"],
-    [true, true, false, false, true],
+    [true,              true,               false,              false,                         true],
     0);
 }
 
@@ -275,12 +275,12 @@ function EvaluateFitnesses(request) {
             for (var kk = 0; kk < cutsite.Candidates.length ; ++kk) {
                 var candidate = cutsite.Candidates[kk];
                 //Check the cutsite region for annealing Temperature
-                candidate.Fitness_Target = EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength, candidate.RightArmLength, candidate.cutSiteLocation, request.Preferences.naEnv);
+                candidate.Fitness_Target =  EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength, candidate.RightArmLength, candidate.cutSiteLocation, request.Preferences.naEnv) ;
                 //This might be inverted. In the end, the closer it is to zero the better. It will always have one sign or the other.
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
-                candidate.Fitness_Target_dG = request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy;
-                candidate.Fitness_AnnealingT = candidate.MeltingTemperature -276; //Reconvert to degrees
-                candidate.Fitness_Specificity = cutsite.SpecificityFitness;
+                candidate.Fitness_Target_dG = Math.round(100* (request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy))/100;
+                candidate.MeltingTemperature = Math.round(100* (candidate.MeltingTemperature - 276))/100; //Reconvert to degrees
+                candidate.Fitness_Specificity = Math.round(100*cutsite.SpecificityFitness)/100;
                 //Find max and min values for normalization
                 if (candidate.Fitness_Target > Max_Target)
                     Max_Target = candidate.Fitness_Target;
@@ -299,11 +299,11 @@ function EvaluateFitnesses(request) {
         var cutsiteTypeCutsiteContainer = request.CutsiteTypesCandidateContainer[ii].Cutsites;
         for (var jj = 0; jj < cutsiteTypeCutsiteContainer.length ; ++jj) {
             var cutsite = cutsiteTypeCutsiteContainer[jj];
-            var ConstrainedSFoldStructures = cutsite.ConstrainedSFoldStructures;
             for (var kk = 0; kk < cutsite.Candidates.length ; ++kk) {
                 //make 1.0 the best and 0.0 the worst. Currently bigger is worst
-                candidate.Fitness_Target = (candidate.Fitness_Target - Min_Target) / Max_Target;
-                candidate.Fitness_Shape = (candidate.Fitness_Shape - Min_Shape) / Max_Shape;
+                var candidate = cutsite.Candidates[kk];
+                candidate.Fitness_Target = 1 - Math.round(1000 * (candidate.Fitness_Target - Min_Target) / Max_Target) /1000;
+                candidate.Fitness_Shape =  1 - Math.round(1000* (candidate.Fitness_Shape - Min_Shape) / Max_Shape )/1000;
             }
         }
     }
