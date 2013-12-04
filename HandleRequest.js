@@ -752,6 +752,7 @@ function HandleRequestPart8(reportObj)
         }
 
     }
+    console.log("done");
     //Writing uncompressed data
     var str = JSON.stringify(request);
     var fs = require('fs');

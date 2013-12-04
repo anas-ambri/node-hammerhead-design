@@ -18,7 +18,7 @@
 
 
 */
-
+var ParetoFrontRank = require('./index.js').ParetoFrontRank;
 var testDataSet =
     [
         { 'effective': 1, 'efficient': 1 },
