@@ -44,17 +44,21 @@ Fold.SFold = function( sequenceFile, targetFolder , reportObj ,constraintFile , 
 	    BufferCount += 1;
 	    exec(command,
             {
-                'timeout' : 660000 //11 min timeout
+                'timeout' : 1200000 //20 min timeout
             }
             ,
             function CommandExecuteCallback(error, stdout, stderr) {
                 BufferCount -= 1;
                 if (error !== null) {
-                    Log("Could not call sfold with " + sequenceFile + "," + targetFolder + "constraintFile", "ERROR Fold.SFold", 0);
-                    Log("Command executed: " + command);
-                    Log("Error received: " + error);
+                    Log(" **** /BEGIN" + stderr, "SFold", 0);
+                    Log("Error calling sfold with " + sequenceFile + "," + targetFolder + "constraintFile", "ERROR Fold.SFold", 0);
+                    Log("Command executed: " + command, "SFold", 0);
+                    Log("Error received: " + error, "SFold", 0);
+                    Log("\tError Code: " + error.code, "SFold", 0);
+                    Log("\tError Sig: " + error.signal, "SFold", 0);
                     Log("stdout sfold :"  + stdout, "SFold", 3);
-                    Log("stderr sfold :"  + stderr, "SFold", 0);
+                    Log("stderr sfold :" + stderr, "SFold", 0);
+                    Log(" **** /END" + stderr, "SFold", 0);
                     var request = reportObj.Request; //Using reportObj from parent scope can cause race-condition if context switches. e.g. another request gets here
                     request.ErrorContainer.push(error);
                     if (request.Completed != true) //only on first erroneous callback
