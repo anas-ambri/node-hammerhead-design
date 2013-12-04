@@ -5,7 +5,7 @@ Array.prototype.RemoveAt = function (index) {
 }
 
 Array.prototype.RemoveAtMany = function (arrayOfIndexes) {
-    arrayOfIndexes.sort(function (a, b) { return a > b;});//This ensures that the indexes are in order
+    arrayOfIndexes = arrayOfIndexes.sort(function (a, b) { return a - b; });//This ensures that the indexes are in order
     for (var ii = 0; ii < arrayOfIndexes.length; ++ii)
     {
         this.RemoveAt(arrayOfIndexes[ii]-ii);//The ii accounts for the index that was removed.
@@ -73,29 +73,34 @@ function ParetoFrontRank(array, propertyArray, maxMinArray, rank)
     var queueArray = array.slice();
     do {
         var frontIndexes = new Array();
-        for (var ii = 0; ii < queueArray.length ; ++ii) {
+        for (var ii = 0; ii < queueArray.length ; ++ii)
+        {
             var testElement = queueArray[ii];
             var testElementDominated = false;
-            for (var jj = 0; jj < queueArray.length; ++jj) {
-                if (ii == jj) {
+            //console.log("Is " + testElement.cutSiteID + ":" + testElement.ID + " dominateed?  " );
+            for (var jj = 0; jj < queueArray.length; ++jj)
+            {
+                if (ii == jj) 
                     continue;//do not test an element against itself
-                }
-                else {
-                    //an element is rank 0 if no one dominates him. Check if any element dominates him
-                    var dominated = _paretoGreaterThan(queueArray[jj], testElement, propertyArray, maxMinArray);
-                    if (dominated) {
-                        var equal = _paretoEqual(queueArray[jj], testElement, propertyArray, 0.01);
-                        //an object dominates itself since it is no better at anything than itself. Identical objects must be caught
-                        if (!equal) {
-                            testElementDominated = true;
-                            break;
-                        }
+
+                //an element is rank 0 if no one dominates him. Check if any element dominates him
+                var dominated = _paretoGreaterThan(queueArray[jj], testElement, propertyArray, maxMinArray);
+                    
+                if (dominated) {
+                    var equal = _paretoEqual(queueArray[jj], testElement, propertyArray, 0.01);
+                    //an object dominates itself since it is no better at anything than itself. Identical objects must be caught
+                    if (!equal) {
+                        //console.log("\tYes by:"  + queueArray[jj].cutSiteID + ":" + queueArray[jj].ID );
+                        testElementDominated = true;
+                        break; ///BREAK GOES TO (1)
                     }
                 }
-            }
+                
+            }// THIS IS (1)
 
             //Not dominated, so it belongs to pareto front
             if (!testElementDominated) {
+                //console.log("Element " + testElement.cutSiteID + ":" + testElement.ID + " gets rank " +rank);
                 testElement.rank = rank;
                 frontIndexes.push(ii);
             }
@@ -143,7 +148,7 @@ function ParetoFrontForRequest(request)
     }
     ParetoFrontRank(allEle,
     ["Fitness_Shape", "Fitness_Target", "Fitness_Target_dG", "Fitness_Specificity", "MeltingTemperature"],
-    [true,              true,               false,              false,                         true],
+    [true,              true,               true,              false,                         true],
     0);
 }
 
@@ -267,6 +272,7 @@ function EvaluateFitnesses(request) {
     var cutsiteTypesLength = request.CutsiteTypesCandidateContainer.length;
 
     var Max_Target = Number.MIN_VALUE, Min_Target = Number.MAX_VALUE, Max_Shape = Number.MIN_VALUE, Min_Shape = Number.MAX_VALUE;
+    var Max_dG = Number.MIN_VALUE, Min_dG = Number.MAX_VALUE;
     for (var ii = 0; ii < cutsiteTypesLength; ++ii) {
         var cutsiteTypeCutsiteContainer = request.CutsiteTypesCandidateContainer[ii].Cutsites;
         for (var jj = 0; jj < cutsiteTypeCutsiteContainer.length ; ++jj) {
@@ -278,7 +284,7 @@ function EvaluateFitnesses(request) {
                 candidate.Fitness_Target =  EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength, candidate.RightArmLength, candidate.cutSiteLocation, request.Preferences.naEnv) ;
                 //This might be inverted. In the end, the closer it is to zero the better. It will always have one sign or the other.
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
-                candidate.Fitness_Target_dG = Math.round(100* (request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy))/100;
+                candidate.Fitness_Target_dG = Math.abs( Math.round(100* (request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy))/100 );
                 candidate.MeltingTemperature = Math.round(100* (candidate.MeltingTemperature - 276))/100; //Reconvert to degrees
                 candidate.Fitness_Specificity = Math.round(100*cutsite.SpecificityFitness)/100;
                 //Find max and min values for normalization
@@ -291,6 +297,11 @@ function EvaluateFitnesses(request) {
                     Max_Shape = candidate.Fitness_Shape;
                 if (candidate.Fitness_Shape < Min_Shape)
                     Min_Shape = candidate.Fitness_Shape;
+
+                if (candidate.Fitness_Target_dG > Max_Shape)
+                    Max_dG = candidate.Fitness_Target_dG;
+                if (candidate.Fitness_Target_dG < Min_Shape)
+                    Min_dG = candidate.Fitness_Target_dG;
             }
         }
     }
@@ -303,7 +314,8 @@ function EvaluateFitnesses(request) {
                 //make 1.0 the best and 0.0 the worst. Currently bigger is worst
                 var candidate = cutsite.Candidates[kk];
                 candidate.Fitness_Target = 1 - Math.round(1000 * (candidate.Fitness_Target - Min_Target) / Max_Target) /1000;
-                candidate.Fitness_Shape =  1 - Math.round(1000* (candidate.Fitness_Shape - Min_Shape) / Max_Shape )/1000;
+                candidate.Fitness_Shape = 1 - Math.round(1000 * (candidate.Fitness_Shape - Min_Shape) / Max_Shape) / 1000;
+                candidate.Fitness_Target_dG = 1 - Math.round(1000 * (candidate.Fitness_Target_dG - Min_dG) / Max_dG) / 1000;
             }
         }
     }
