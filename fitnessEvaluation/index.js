@@ -298,9 +298,9 @@ function EvaluateFitnesses(request) {
                 if (candidate.Fitness_Shape < Min_Shape)
                     Min_Shape = candidate.Fitness_Shape;
 
-                if (candidate.Fitness_Target_dG > Max_Shape)
+                if (candidate.Fitness_Target_dG > Max_dG)
                     Max_dG = candidate.Fitness_Target_dG;
-                if (candidate.Fitness_Target_dG < Min_Shape)
+                if (candidate.Fitness_Target_dG < Min_dG)
                     Min_dG = candidate.Fitness_Target_dG;
             }
         }
