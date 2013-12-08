@@ -44,24 +44,25 @@ function MeltingTCalcRouter(str, prefs)
             { 'left': 4, 'right': -1, 'type': 'U' },
             { 'left': 5, 'right': -1, 'type': 'G' },
             { 'left': 6, 'right': -1, 'type': 'A' },//End not Connected
-            { 'left': 7, 'right': 21, 'type': 'G' },//Connected
-            { 'left': 8, 'right': 20, 'type': 'U' },
-            { 'left': 9, 'right': 19, 'type': 'C' },
-            { 'left': 10, 'right': 18, 'type': 'G' },
-            { 'left': 11, 'right': 17, 'type': 'C' }, //End connected
+            { 'left': 7, 'right': 22, 'type': 'G' },//Connected
+            { 'left': 8, 'right': 21, 'type': 'U' },
+            { 'left': 9, 'right': 20, 'type': 'C' },
+            { 'left': 10, 'right': 19, 'type': 'G' },
+            { 'left': 11, 'right': 18, 'type': 'C' }, //End connected
             { 'left': 12, 'right': -1, 'type': 'U' }, //Not connected
             { 'left': 13, 'right': -1, 'type': 'G' },
             { 'left': 14, 'right': -1, 'type': 'A' },
             { 'left': 15, 'right': -1, 'type': 'A' },
             { 'left': 16, 'right': -1, 'type': 'A' }, //End not connected
-            { 'left': 17, 'right': 11, 'type': 'G' }, //Connected
-            { 'left': 18, 'right': 10, 'type': 'C' },
-            { 'left': 19, 'right': 9, 'type': 'G' },
-            { 'left': 20, 'right': 8, 'type': 'A' },
-            { 'left': 21, 'right': 7, 'type': 'C' }, //End connected
-            { 'left': 22, 'right': -1, 'type': 'G' },//Not Connected
-            { 'left': 23, 'right': -1, 'type': 'A' },
-            { 'left': 24, 'right': -1, 'type': 'A' } //End not connected
+            { 'left': 17, 'right': -1, 'type': 'T' },
+            { 'left': 18, 'right': 11, 'type': 'G' }, //Connected
+            { 'left': 19, 'right': 10, 'type': 'C' },
+            { 'left': 20, 'right': 9, 'type': 'G' },
+            { 'left': 21, 'right': 8, 'type': 'A' },
+            { 'left': 22, 'right': 7, 'type': 'C' }, //End connected
+            { 'left': 23, 'right': -1, 'type': 'G' },//Not Connected
+            { 'left': 24, 'right': -1, 'type': 'A' },
+            { 'left': 25, 'right': -1, 'type': 'A' } //End not connected
         ]
         
         
@@ -85,21 +86,22 @@ function MeltingTCalcRouter(str, prefs)
             {'left':11,'right':0,'type':'C'}
         ],
         [
-            { 'left': 0, 'right': 14, 'type': 'G' },//Connected
-            { 'left': 1, 'right': 13, 'type': 'U' },
-            { 'left': 2, 'right': 12, 'type': 'C' },
-            { 'left': 3, 'right': 11, 'type': 'G' },
-            { 'left': 4, 'right': 10, 'type': 'C' }, //End connected
+            { 'left': 0, 'right': 15, 'type': 'G' },//Connected
+            { 'left': 1, 'right': 14, 'type': 'U' },
+            { 'left': 2, 'right': 13, 'type': 'C' },
+            { 'left': 3, 'right': 12, 'type': 'G' },
+            { 'left': 4, 'right': 11, 'type': 'C' }, //End connected
             { 'left': 5, 'right': -1, 'type': 'U' }, //Not connected
             { 'left': 6, 'right': -1, 'type': 'G' },
             { 'left': 7, 'right': -1, 'type': 'A' },
             { 'left': 8, 'right': -1, 'type': 'A' },
             { 'left': 9, 'right': -1, 'type': 'A' }, //End not connected
-            { 'left': 10, 'right': 4, 'type': 'G' }, //Connected
-            { 'left': 11, 'right': 3, 'type': 'C' },
-            { 'left': 12, 'right': 2, 'type': 'G' },
-            { 'left': 13, 'right': 1, 'type': 'A' },
-            { 'left': 14, 'right': 0, 'type': 'C' } //End connected
+            { 'left': 10, 'right': -1, 'type': 'T' },
+            { 'left': 11, 'right': 4, 'type': 'G' }, //Connected
+            { 'left': 12, 'right': 3, 'type': 'C' },
+            { 'left': 13, 'right': 2, 'type': 'G' },
+            { 'left': 14, 'right': 1, 'type': 'A' },
+            { 'left': 15, 'right': 0, 'type': 'C' } //End connected
         ]
 
     ];
