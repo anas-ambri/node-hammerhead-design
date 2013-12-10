@@ -50,6 +50,12 @@ function CreateCandidates (seq, cutSites, options)
 	var ramin = options.right_arm_min;
 	var lamax = options.left_arm_max;
 	var ramax = options.right_arm_max;
+	if (options.coreTypeId != undefined && options.coreTypeId == 1)
+	{
+        //If Wishbone, increment by five to accomodate the TAA chunk
+	    ramin += 5;
+	    ramax += 5;
+	}
 	Log("Creating candidates with options: left range: [" +lamin+","+lamax+"[, right range: ["+ramin+","+ramax+"["+'\nSequence is ' + seq,"CreateCandidates",5);
 	for(var ii = 0 ; ii < cutSites.length;++ii)
 	{
@@ -180,12 +186,17 @@ function AppendPromoterToMany(candidateArray, promoter, promoterCompatRange)
     <param name='CoreStructure'>The core structure ID</param>
     <return>The sequence modified to contain the core structure</return>
 */
-function AddCore(sequence, location, CoreStructure) {
+function AddCore(sequence, location, CoreStructure, CoreStructureTypeId) {
     var coreStructString = '';
     for (var ii = 0; ii < CoreStructure.length; ++ii) {
         coreStructString += CoreStructure[ii].type;
     }
     sequence = sequence.substr(0, location) + coreStructString + sequence.substr(location + 1); //Kills non annealing c + adds core
+    
+    if (CoreStructureTypeId == 1) //Add wishbonde secondary ring
+    {
+        sequence = sequence.substr(0, location - 5) + "UAA" + sequence.substr(location - 5);
+    }
     return sequence;
 }
 
