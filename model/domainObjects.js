@@ -5,7 +5,7 @@ var MeltingTCalcRouter = require('../meltingTemp/').MeltingTCalcRouter;
 
     var CATALITIC_CORES_STR =
     [
-        'CUGAUGAGUCCGUGAGGACGAA',
+        'CUGAUGAGGCCGAAAGGCCGAA',
         'CUGAUGAGUCGCUGAAATGCGACGAA'
     ];
 
@@ -21,16 +21,16 @@ var MeltingTCalcRouter = require('../meltingTemp/').MeltingTCalcRouter;
             { 'left': 5, 'right': -1, 'type': 'G' },
             { 'left': 6, 'right': -1, 'type': 'A' },//End not Connected
             { 'left': 7, 'right': 18, 'type': 'G' },//Connected
-            { 'left': 8, 'right': 17, 'type': 'U' },
+            { 'left': 8, 'right': 17, 'type': 'G' },
             { 'left': 9, 'right': 16, 'type': 'C' },
             { 'left': 10, 'right': 15, 'type': 'C' }, //End connected
             { 'left': 11, 'right': -1, 'type': 'G' }, //Not connected
-            { 'left': 12, 'right': -1, 'type': 'U' },
-            { 'left': 13, 'right': -1, 'type': 'G' },
+            { 'left': 12, 'right': -1, 'type': 'A' },
+            { 'left': 13, 'right': -1, 'type': 'A' },
             { 'left': 14, 'right': -1, 'type': 'A' }, //End not connected
             { 'left': 15, 'right': 10, 'type': 'G' }, //Connected
             { 'left': 16, 'right': 9, 'type': 'G' },
-            { 'left': 17, 'right': 8, 'type': 'A' },
+            { 'left': 17, 'right': 8, 'type': 'C' },
             { 'left': 18, 'right': 7, 'type': 'C' }, //End not connected
             { 'left': 19, 'right': -1, 'type': 'G' },//Connected
             { 'left': 20, 'right': -1, 'type': 'A' },
@@ -67,22 +67,22 @@ var MeltingTCalcRouter = require('../meltingTemp/').MeltingTCalcRouter;
         
         
     ];
-
+//Alternative normal type : CUGAUGAGUCCGUGAGGACGAA
     var SHORT_CATALITIC_CORES =
     [
         //Normal
         [
             {'left':0,'right':11,'type':'G'},
-            {'left':1,'right':10,'type':'U'},
+            {'left':1,'right':10,'type':'G'},
             {'left':2,'right':9,'type':'C'},
             {'left':3,'right':8,'type':'C'}, //End connected
             {'left':4,'right':-1,'type':'G'}, //Not connected
-            {'left':5,'right':-1,'type':'U'},
-            {'left':6,'right':-1,'type':'G'},
+            {'left':5,'right':-1,'type':'A'},
+            {'left':6,'right':-1,'type':'A'},
             {'left':7,'right':-1,'type':'A'}, //End not connected
             {'left':8,'right':3,'type':'G'}, //Connected
             {'left':9,'right':2,'type':'G'},
-            {'left':10,'right':1,'type':'A'},
+            {'left':10,'right':1,'type':'C'},
             {'left':11,'right':0,'type':'C'}
         ],
         [
