@@ -1,14 +1,14 @@
-var MeltingTCalc = require('../meltingTemp/').MeltingTCalc;
-var tm_Basic = MeltingTCalc.tm_Basic;
-var tm_Salt_Adjusted = MeltingTCalc.tm_Salt_Adjusted;
+var MeltingTCalcRouter = require('../meltingTemp/').MeltingTCalcRouter;
 
-function MeltingTCalcRouter(str, prefs)
-{
-    if (prefs == null || prefs.naEnv == null)
-        return tm_Basic(str);
-    else
-        return tm_Salt_Adjusted(str, prefs.naEnv);//(Na + K) in mM
-}
+
+
+
+    var CATALITIC_CORES_STR =
+    [
+        'CUGAUGAGUCCGUGAGGACGAA',
+        'CUGAUGAGUCGCUGAAATGCGACGAA'
+    ];
+
 
     var CATALITIC_CORES =
     [
@@ -54,7 +54,7 @@ function MeltingTCalcRouter(str, prefs)
             { 'left': 14, 'right': -1, 'type': 'A' },
             { 'left': 15, 'right': -1, 'type': 'A' },
             { 'left': 16, 'right': -1, 'type': 'A' }, //End not connected
-            { 'left': 17, 'right': -1, 'type': 'T' },
+            { 'left': 17, 'right': -1, 'type': 'U' },
             { 'left': 18, 'right': 11, 'type': 'G' }, //Connected
             { 'left': 19, 'right': 10, 'type': 'C' },
             { 'left': 20, 'right': 9, 'type': 'G' },
@@ -96,7 +96,7 @@ function MeltingTCalcRouter(str, prefs)
             { 'left': 7, 'right': -1, 'type': 'A' },
             { 'left': 8, 'right': -1, 'type': 'A' },
             { 'left': 9, 'right': -1, 'type': 'A' }, //End not connected
-            { 'left': 10, 'right': -1, 'type': 'T' },
+            { 'left': 10, 'right': -1, 'type': 'U' },
             { 'left': 11, 'right': 4, 'type': 'G' }, //Connected
             { 'left': 12, 'right': 3, 'type': 'C' },
             { 'left': 13, 'right': 2, 'type': 'G' },
@@ -334,3 +334,4 @@ function MeltingTCalcRouter(str, prefs)
     exports.StructureInfo = StructureInfo;
     exports.CATALITIC_CORES = CATALITIC_CORES;
     exports.CutsiteTypeCutsiteContainer = CutsiteTypeCutsiteContainer;
+    exports.CATALITIC_CORES_STR = CATALITIC_CORES_STR;

@@ -169,22 +169,29 @@ function CountCandidatesFromRaw(rawCandidates)
 function VerifyParameters(request)
 {
     var allOk = true;
-    if (request.Preferences.left_arm_min < 0) {
-        request.UpdateState("Left arm minumum is less than 0!");
+    if (request.Preferences.left_arm_min < 1) {
+        request.UpdateState("Left arm minumum is less than 1!");
         allOk = false;
     }
-    if (request.Preferences.right_arm_min < 0) {
-        request.UpdateState("Right arm minumum is less than 0!");
+    if (request.Preferences.right_arm_min < 1) {
+        request.UpdateState("Right arm minumum is less than 1!");
         allOk = false;
     }
-    if (request.Preferences.left_arm_max > 13) {
-        request.UpdateState("Left arm max is more than 13!");
+    if (request.Preferences.left_arm_max > 16) {
+        request.UpdateState("Left arm max is more than 16!");
         allOk = false;
     }
-    if (request.Preferences.right_arm_max > 13) {
-        request.UpdateState("Right arm max is more than 13!");
+    if (request.Preferences.right_arm_max > 16) {
+        request.UpdateState("Right arm max is more than 16!");
         allOk = false;
     }
+
+    if ((request.Preferences.left_arm_max - request.Preferences.left_arm_min)
+        * (request.Preferences.right_arm_max - request.Preferences.right_arm_min) > 100) {
+        request.UpdateState("The product of the difference of the arm lengths exceeds 100! Too many candidates will be generated. (i.e. (rmax - rmin)*(lmax-lmin) > 100 )");
+        allOk = false;
+    }
+
     if (request.Preferences.naEnv == 0) {
         request.Preferences.naEnv = null;
     }
@@ -297,7 +304,7 @@ function _handleRequestPart1(request)
 				    'right_arm_min': request.Preferences.right_arm_min,
 				    'left_arm_max': request.Preferences.left_arm_max,
 				    'right_arm_max': request.Preferences.right_arm_max,
-				    'promoter': request.Preferences.promoter
+				    'coreTypeId': request.coreTypeId
 				}
 			);
         //Find the candidate count
@@ -335,11 +342,11 @@ function _handleRequestPart1(request)
             for(var kk = 0; kk < cutsiteCandidates.length; ++kk)
             {
                 var rawCandidate = cutsiteCandidates[kk];
-                var seqWithCore = AddCore(rawCandidate.seq, rawCandidate.cut , Model.DomainObjects.CATALITIC_CORES[request.coreTypeId]);
+                var seqWithCore = AddCore(rawCandidate.seq, rawCandidate.cut, Model.DomainObjects.CATALITIC_CORES[request.coreTypeId], request.coreTypeId);
                 var newCandidate  = 
                 new Candidate( 
                     seqWithCore,
-                    rawCandidate.cut, 
+                    rawCandidate.cut + (request.coreTypeId == 0 ? 0 : 5), /*Catalitic core start*/
                     /*Generate candidate ID id*/ kk.toString(), 
                     request.coreTypeId, 
                     request.ID ,

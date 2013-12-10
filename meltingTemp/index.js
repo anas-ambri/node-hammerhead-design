@@ -1,6 +1,26 @@
 var MeltingTCalc = require('./melting_t.js');
 var MELTING_LOWERBOUND = 5 ; //That is 5 degrees below environment T
-var MELTING_UPPERBOUND = 20 ; //That is 5 degrees below environment T
+var MELTING_UPPERBOUND = 30 ; //That is 20 degrees above environment T
+
+
+function MeltingTCalcRouter(str, prefs) {
+    //if (prefs == null || prefs.naEnv == null)
+    //    return tm_Basic(str);
+    //else
+    //    return tm_Salt_Adjusted(str, prefs.naEnv);//(Na + K) in mM
+    var saltConc = 0;
+    var meltingT = 0;
+    if (prefs.naEnv == null && prefs.mgEnv == null)
+        meltingT = MeltingTCalc.tm_Basic(str);
+    else {
+        if (prefs.naEnv != null)
+            saltConc += prefs.naEnv;
+        if (prefs.mgEnv != null)
+            saltConc += prefs.mgEnv;
+        meltingT = MeltingTCalc.tm_Salt_Adjusted(str, prefs.naEnv + prefs.mgEnv); //MUST BE IN mM
+    }
+    return meltingT;
+}
 
 function CleanseCandidates(rawCandidatesPerCutsite,prefs)
 {
@@ -17,17 +37,8 @@ function CleanseCandidates(rawCandidatesPerCutsite,prefs)
             var candidate = cutsiteCandidates[jj];
             //Remove non-annealing c (G in this case since it is reverse complemented candidate)
             var seqToCompute = candidate.seq.substr(0, candidate.cut) + candidate.seq.substr(candidate.cut + 1);
-            var saltConc = 0;
-            var meltingT = null;
-            if (prefs.naEnv == null && prefs.mgEnv == null)
-                meltingT = MeltingTCalc.tm_Basic(seqToCompute);
-            else {
-                if (prefs.naEnv != null)
-                    saltConc += prefs.naEnv;
-                if (prefs.mgEnv != null)
-                    saltConc += prefs.mgEnv;
-                meltingT = MeltingTCalc.tm_Salt_Adjusted(seqToCompute, prefs.naEnv + prefs.mgEnv); //MUST BE IN mM
-            }
+            
+            var meltingT = MeltingTCalcRouter(seqToCompute, prefs);
             candidate.MeltingTemperature = meltingT;
             if (meltingT >= (prefs.tempEnv - MELTING_LOWERBOUND) && meltingT <= (prefs.tempEnv + MELTING_UPPERBOUND))
                 cleansed.push(candidate);
@@ -36,7 +47,11 @@ function CleanseCandidates(rawCandidatesPerCutsite,prefs)
     }
     return res;
 }
-exports.MeltingTCalc = MeltingTCalc;
+
+
+
+//exports.MeltingTCalc = MeltingTCalc;
 exports.CleanseCandidates = CleanseCandidates;
+exports.MeltingTCalcRouter = MeltingTCalcRouter;
 
 
