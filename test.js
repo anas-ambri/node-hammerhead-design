@@ -78,7 +78,7 @@ var request = new Request
     },
     'Test', //ID
     1,//CoreType
-    '', //organism such as = mouse (taxid:10090)
+    'mouse (taxid:10090)', //organism such as = mouse (taxid:10090)
     function (request) //callback
     {
 
