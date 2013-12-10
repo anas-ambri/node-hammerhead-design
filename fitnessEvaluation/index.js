@@ -237,20 +237,15 @@ function _getContiniousPairsInRegion(structureInfo, start, end) {
     <param name='saltConc'>salt concentration to evaluate melting temperature</param>
     <return>The fitness for the target, for the given region</return>
 */
-function EvaluateTargetFoldsFitness(structureInfoArray, leftArmLength, rightArmLength, cutSiteLocation, saltConc) {
-    if (saltConc == undefined)
-        saltConc = null;
-    
+function EvaluateTargetFoldsFitness(structureInfoArray, leftArmLength, rightArmLength, cutSiteLocation, prefs) {
+
     var totalFitness = 0;
     for (var ii = 0 ; ii < structureInfoArray.length; ++ii) {
-        var continiousSeqArr = _getContiniousPairsInRegion(structureInfoArray[ii], cutSiteLocation - leftArmLength, cutSiteLocation + rightArmLength);
+        var continiousSeqArr = _getContiniousPairsInRegion(structureInfoArray[ii], cutSiteLocation - leftArmLength, cutSiteLocation + rightArmLength );
         var partialFitness = 0;
         //add the melting temperature of continious pairs
-        for (var jj = 0; jj < continiousSeqArr.length; ++jj) {
-            if (saltConc == null)
-                partialFitness += MeltingTemp.MeltingTCalc.tm_Basic(continiousSeqArr[jj]);
-            else
-                partialFitness += MeltingTemp.MeltingTCalc.tm_Salt_Adjusted(continiousSeqArr[jj], saltConc);
+        for (var jj = 0; jj < continiousSeqArr.length; ++jj) {   
+            partialFitness += MeltingTemp.MeltingTCalcRouter(continiousSeqArr[jj], prefs);
         }
         totalFitness += partialFitness * structureInfoArray[ii].Frequency;
 
@@ -281,7 +276,7 @@ function EvaluateFitnesses(request) {
             for (var kk = 0; kk < cutsite.Candidates.length ; ++kk) {
                 var candidate = cutsite.Candidates[kk];
                 //Check the cutsite region for annealing Temperature
-                candidate.Fitness_Target =  EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength, candidate.RightArmLength, candidate.cutSiteLocation, request.Preferences.naEnv) ;
+                candidate.Fitness_Target = EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength + (request.coreTypeId == 1? 5: 0)/*+ 5 accounts for limit of 5 arm lgth in Wishbone*/ , candidate.RightArmLength + 2/*+ 2 accounts for UC*/, candidate.cutSiteLocation, request.Preferences);
                 //This might be inverted. In the end, the closer it is to zero the better. It will always have one sign or the other.
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
                 candidate.Fitness_Target_dG = Math.abs(  request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy );

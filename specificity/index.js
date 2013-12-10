@@ -296,7 +296,7 @@ function parseQueries(query) {
         var subjIndex = matches[ii].substr(begInd, matches[ii].indexOf('\n', begInd) - begInd);//This is the first matched index of the query
         subjIndex = parseInt(subjIndex.split(' ')[2]) - 1; //We need this to find where the expected GUC will be on the sbjt
 
-        res.push({ 'r': ref, 'p': percent, 's': subject, 'i': matchIndex, 'si': subjIndex });
+        res.push({ 'r': ref.substr( ref.indexOf('|')+1 ), 'p': percent, 's': subject, 'i': matchIndex, 'si': subjIndex });
        // console.log('ref=' + ref + ';' + 'Per=' + percent + ';' + 'subject=' + subject + ';'+'in='+matchIndex);
     }
     res.index = queryNum;

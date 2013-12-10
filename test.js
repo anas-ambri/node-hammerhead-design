@@ -70,7 +70,7 @@ var request = new Request
         'right_arm_min': 5,
         'left_arm_max':8,
         'right_arm_max':8,
-        'promoter': 'TAATACGACTCACTATAGGG'
+        'promoter': ''
 //        5 TAATACGACTCACTATAGGG
 
 //        5 TAATACGACTCACTATAGCG  
