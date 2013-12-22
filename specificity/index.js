@@ -240,12 +240,28 @@ function ParseBlastResults(reportObject)
         {
             var match = MatchArray[jj];
             var cutsite_is = match.s.substr(cutsite.BaseCutindex - match.i - 2, 3);
+            var cleaving = true;
+
+            //cleavage only
             if (cutsite_is == RnaToDna(cutsiteType)) //The cutsite is there
-                cutsite.OfftargetLocations.push(match.r + ',' + match.p+',@'+match.si);
+            {
+                cutsite.OfftargetLocations.push(match.r + ',' + match.p + ',@' + match.si);
+            }
             else
-                continue; //The cutsite is not matched. Go to the next match
+            {
+                if (!req.Preferences.specificity) //this parameter specifies whether we use cleavage only
+                    continue; //The cutsite is not matched. Go to the next match
+                //if hybridization then add anyways
+                cleaving = false;
+                cutsite.OfftargetLocations.push(match.r + ',' + match.p + ',@' + match.si);
+            }
+
             //Weight it by how much of a match it is
-            cutsite.SpecificityFitness += parseInt(match.p.split('(')[1]) / 100;
+            if (match.r.indexOf('XN_') != -1) //XNs are not counted towards total specificity but still reported
+            {
+                //punish non-cleaving by reducing their weight
+                cutsite.SpecificityFitness += ( cleaving? 1.0: 0.5) * parseInt(match.p.split('(')[1]) / 100;
+            }
         }
     }
     //For those that returned no matches, they might be completely omitted from the respose. Set them to 0 to indicate that
