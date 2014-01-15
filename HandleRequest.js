@@ -346,7 +346,7 @@ function _handleRequestPart1(request)
                 var newCandidate  = 
                 new Candidate( 
                     seqWithCore,
-                    rawCandidate.cut + (request.coreTypeId == 0 ? 0 : 5), /*Catalitic core start*/
+                    rawCandidate.cut + (request.coreTypeId == 0 ? 0 : 3), /*Catalitic core start (3 accounts for TAA)*/
                     /*Generate candidate ID id*/ kk.toString(), 
                     request.coreTypeId, 
                     request.ID ,

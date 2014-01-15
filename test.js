@@ -70,14 +70,15 @@ var request = new Request
         'right_arm_min': 5,
         'left_arm_max':8,
         'right_arm_max':8,
-        'promoter': ''
+        'promoter': '',
+        'specificity':true
 //        5 TAATACGACTCACTATAGGG
 
 //        5 TAATACGACTCACTATAGCG  
 
     },
     'Test', //ID
-    1,//CoreType
+    0,//CoreType
     'mouse (taxid:10090)', //organism such as = mouse (taxid:10090)
     function (request) //callback
     {

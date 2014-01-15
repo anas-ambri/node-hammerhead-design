@@ -34,7 +34,7 @@ function QueryBlastForRequest(reportObject) {
         reportObject.AddToExecutionCount(1);
         var cutsiteType = request.CutsiteTypesCandidateContainer[ii];
         for (var jj = 0; jj < cutsiteType.Cutsites.length; ++jj) {
-            primers += '>' + jj + '    \n' + cutsiteType.Cutsites[jj].BaseSeq + '     \n';
+            primers += '>' + jj + '    \n' + RnaToDna(cutsiteType.Cutsites[jj].BaseSeq) + '     \n';
         }
         QueryBlast(primers, request.InVivoOrganism, new InternalReportObject(request.ID , cutsiteType.Type, primers,reportObject) );
     }
@@ -240,27 +240,17 @@ function ParseBlastResults(reportObject)
         {
             var match = MatchArray[jj];
             var cutsite_is = match.s.substr(cutsite.BaseCutindex - match.i - 2, 3);
-            var cleaving = true;
+            var cleaving = cutsite_is == RnaToDna(cutsiteType);//The cutsite is there
 
-            //cleavage only
-            if (cutsite_is == RnaToDna(cutsiteType)) //The cutsite is there
-            {
-                cutsite.OfftargetLocations.push(match.r + ',' + match.p + ',@' + match.si);
-            }
-            else
-            {
-                if (!req.Preferences.specificity) //this parameter specifies whether we use cleavage only
-                    continue; //The cutsite is not matched. Go to the next match
-                //if hybridization then add anyways
-                cleaving = false;
-                cutsite.OfftargetLocations.push(match.r + ',' + match.p + ',@' + match.si);
-            }
+            cutsite.OfftargetLocations.push(match.r + ',' + match.p + ',@' + match.si);
 
             //Weight it by how much of a match it is
-            if (match.r.indexOf('XN_') != -1) //XNs are not counted towards total specificity but still reported
+            if (match.r.indexOf('XM_') == -1 && match.r.indexOf('XR_') == -1) //XNs are not counted towards total specificity but still reported
             {
-                //punish non-cleaving by reducing their weight
-                cutsite.SpecificityFitness += ( cleaving? 1.0: 0.5) * parseInt(match.p.split('(')[1]) / 100;
+                //Cleaving have a modifier of 1.
+                //Non-cleaving have a modifier of 0.7 if silencing is of concern
+                // 0 if it isnt.
+                cutsite.SpecificityFitness += ( cleaving? 1.0 : (!req.Preferences.specificity && !cleaving ? 0.7 : 0.0) ) * parseInt(match.p.split('(')[1]) / 100;
             }
         }
     }

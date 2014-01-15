@@ -86,7 +86,7 @@ function CreateCandidates (seq, cutSites, options)
 
 				var candidateSequence = ReverseComplement(seq.substr(start,length));
 				var candidateULocation = candidateSequence.length - (jj+2) - 1; //jj +2  is the index of C in GUC, this transforms it into the index of U in the reverse complement
-				firstCutsiteCands.push({"seq" : candidateSequence, "cut":candidateULocation, "targetLocation" :cutSites[ii], 'left':jj,'right':kk});	
+				firstCutsiteCands.push({"seq" : candidateSequence, "cut":candidateULocation, "targetLocation" :cutSites[ii], 'left':kk,'right':jj});	
 			}
 		}
 		

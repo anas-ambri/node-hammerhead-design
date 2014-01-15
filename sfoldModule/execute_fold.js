@@ -8,7 +8,7 @@ var unafold_path = config.env.unafold_path;
 //This variable holds how many folds are executing at a time, so that no more than BUFFER_MAX execute simultaneously.
 //(any
 var BufferCount = 0;
-var BUFFER_MAX = 5;
+var BUFFER_MAX = 3;
 
 var SFOLD_COMMAND = process.platform === 'win32' ? 'sfold.exe' : sfold_path;
 var UNAFOLD_COMMAND = process.platform === 'win32' ? 'sfold.exe' : unafold_path;
