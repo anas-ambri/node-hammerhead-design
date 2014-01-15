@@ -284,7 +284,7 @@ var MeltingTCalcRouter = require('../meltingTemp/').MeltingTCalcRouter;
         //Find first pair of catalitic core
         var locOfCatPair = -1;
         var pairs = this.ConnectedPairs;
-        var coreStruct = SHORT_CATALITIC_CORES[catCoreType];
+        var coreStruct = CATALITIC_CORES[catCoreType];
         for(var ii = 0; ii < pairs.length; ++ii)
         {
             if(pairs[ii].left==catCoreStartNode)
@@ -299,8 +299,11 @@ var MeltingTCalcRouter = require('../meltingTemp/').MeltingTCalcRouter;
             while (coreIndex < coreStruct.length && pairIndex < pairs.length)
             {
                 //console.log(pairs[pairIndex].type + ' matched with ' + coreStruct[coreIndex].type);
-                if( pairs[pairIndex].right != (coreStruct[coreIndex].right == -1 ? -1 :(catCoreStartNode + coreStruct[coreIndex].right))
-                || pairs[pairIndex].left != catCoreStartNode + coreStruct[coreIndex].left )				
+                if (
+                    pairs[pairIndex].right != (coreStruct[coreIndex].right == -1 ? -1 : (catCoreStartNode + coreStruct[coreIndex].right))
+                    ||
+                    pairs[pairIndex].left  != (coreStruct[coreIndex].left == -1 ? -1 : (catCoreStartNode + coreStruct[coreIndex].left))
+                  )
                 {
                     //console.log('The node '+ pairs[pairIndex].left + ' of the catalictic core node ' + coreIndex + ' is not properly connected. ');
                     //console.log('\t connecting to '+ pairs[pairIndex].right+', expected' + (coreStruct[coreIndex].right == -1 ? -1 :(catCoreStartNode + coreStruct[coreIndex].right)).toString() );

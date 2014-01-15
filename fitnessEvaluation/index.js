@@ -241,7 +241,7 @@ function EvaluateTargetFoldsFitness(structureInfoArray, leftArmLength, rightArmL
 
     var totalFitness = 0;
     for (var ii = 0 ; ii < structureInfoArray.length; ++ii) {
-        var continiousSeqArr = _getContiniousPairsInRegion(structureInfoArray[ii], cutSiteLocation - leftArmLength, cutSiteLocation + rightArmLength );
+        var continiousSeqArr = _getContiniousPairsInRegion(structureInfoArray[ii], cutSiteLocation - rightArmLength + 2 , cutSiteLocation +  leftArmLength + 3);
         var partialFitness = 0;
         //add the melting temperature of continious pairs
         for (var jj = 0; jj < continiousSeqArr.length; ++jj) {   
@@ -276,7 +276,7 @@ function EvaluateFitnesses(request) {
             for (var kk = 0; kk < cutsite.Candidates.length ; ++kk) {
                 var candidate = cutsite.Candidates[kk];
                 //Check the cutsite region for annealing Temperature
-                candidate.Fitness_Target = EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength + (request.coreTypeId == 1? 5: 0)/*+ 5 accounts for limit of 5 arm lgth in Wishbone*/ , candidate.RightArmLength + 2/*+ 2 accounts for UC*/, candidate.cutSiteLocation, request.Preferences);
+                candidate.Fitness_Target = EvaluateTargetFoldsFitness(NormalSFoldShapes, candidate.LeftArmLength , candidate.RightArmLength + 2/*+ 2 accounts for UC*/, candidate.cutSiteLocation, request.Preferences);
                 //This might be inverted. In the end, the closer it is to zero the better. It will always have one sign or the other.
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
                 candidate.Fitness_Target_dG = Math.abs(  request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy );
