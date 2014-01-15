@@ -804,6 +804,19 @@ function HandleRequestPart8(reportObj)
     Log(endtime, 'HandleRequestPart8', 0);
     request.UpdateState(endtime);
 
+    //Delete all folders, except json files
+    var fs = require('fs'),
+	rimraf = require('rimraf');
+    fs.readdir(process.cwd(), function(err, files){
+	if(!err){
+	    files.forEach(function(file){
+		if(fs.statSync(file).isDirectory()){
+		    rimraf(file,function(){});
+		}
+	    });
+	}
+    });
+
     var reportObject = new ReportObject(request);
     reportObj.ExecuteIfComplete(8);
 
