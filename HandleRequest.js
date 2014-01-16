@@ -806,8 +806,9 @@ function HandleRequestPart8(reportObj)
 
     //Delete all folders, except json files
     var fs = require('fs'),
-	rimraf = require('rimraf');
-    fs.readdir(process.cwd(), function(err, files){
+	rimraf = require('rimraf'),
+	path = require('path');
+    fs.readdir(path.join(process.cwd(), request.ID), function(err, files){
 	if(!err){
 	    files.forEach(function(file){
 		if(fs.statSync(file).isDirectory()){
