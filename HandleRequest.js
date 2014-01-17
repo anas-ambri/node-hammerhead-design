@@ -762,7 +762,8 @@ function HandleRequestPart8(reportObj)
     console.log("done");
     //Writing uncompressed data
     var str = JSON.stringify(request);
-    var fs = require('fs');
+    var fs = require('fs'),
+        path = require('path');
     fs.writeFileSync(path.join(process.cwd(), request.ID, 'requestStateUncompressed.json'), str);
 
     reportObj.Request.UpdateState('Compressing results');
