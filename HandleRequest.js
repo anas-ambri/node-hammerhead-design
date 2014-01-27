@@ -762,8 +762,7 @@ function HandleRequestPart8(reportObj)
     console.log("done");
     //Writing uncompressed data
     var str = JSON.stringify(request);
-    var fs = require('fs'),
-        path = require('path');
+    var fs = require('fs');
     fs.writeFileSync(path.join(process.cwd(), request.ID, 'requestStateUncompressed.json'), str);
 
     reportObj.Request.UpdateState('Compressing results');
@@ -806,14 +805,14 @@ function HandleRequestPart8(reportObj)
     request.UpdateState(endtime);
 
     //Delete all folders, except json files
-    var fs = require('fs'),
-	rimraf = require('rimraf'),
-	path = require('path');
-    fs.readdir(path.join(process.cwd(), request.ID), function(err, files){
+    var rimraf = require('rimraf'),
+	pathToDirs = path.join(process.cwd(), request.ID);
+    fs.readdir(pathToDirs, function(err, files){
 	if(!err){
 	    files.forEach(function(file){
-		if(fs.statSync(file).isDirectory()){
-		    rimraf(file,function(){});
+		var pathToDir = path.join(pathToDirs, file);
+		if(fs.statSync(pathToDir).isDirectory()){
+		    rimraf(pathToDir,function(){});
 		}
 	    });
 	}
