@@ -809,13 +809,14 @@ function HandleRequestPart8(reportObj)
     request.UpdateState(endtime);
 
     //Delete all folders, except json files
-    var fs = require('fs'),
-	rimraf = require('rimraf');
-    fs.readdir(process.cwd(), function(err, files){
+    var rimraf = require('rimraf'),
+	pathToDirs = path.join(process.cwd(), request.ID);
+    fs.readdir(pathToDirs, function(err, files){
 	if(!err){
 	    files.forEach(function(file){
-		if(fs.statSync(file).isDirectory()){
-		    rimraf(file,function(){});
+		var pathToDir = path.join(pathToDirs, file);
+		if(fs.statSync(pathToDir).isDirectory()){
+		    rimraf(pathToDir,function(){});
 		}
 	    });
 	}
