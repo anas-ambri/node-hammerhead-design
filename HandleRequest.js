@@ -250,7 +250,11 @@ function HandleRequestPart1(request)
     request.UpdateState(startime);
     var estimate = EstimateTime(request);
     Log('Estimate is ' + estimate + ' minutes', 'HandleRequestPart1', 0);
-    
+    /*WARNING: This excution clears the queue of waiting folds which should be empty UNLESS simulateneous 'requests' were 
+    to be supported. If in the future should the code be modified to support such, this must be taken into account.
+    This was necessary to protect from an unknown bug in which a fold was never executed.
+    */
+    FoldModule.Folding.Fold.ClearBuffer();
     setTimeout(function timeOut() { _handleRequestPart1(request) }, 0);
     return estimate;
 }

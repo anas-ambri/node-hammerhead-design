@@ -18,6 +18,21 @@ function Fold(){}
 var SFOLD_CALL_NO_CONSTRAINT = SFOLD_COMMAND+" -o %OUTDIR% %SEQUENCEFILE%";
 var SFOLD_CALL = SFOLD_COMMAND+" -f %CONSTRAINT% -o %OUTDIR% %SEQUENCEFILE%";
 var QUEUE = new Array();
+
+Fold.ClearBuffer = function ()
+{
+    if (QUEUE.length != 0)
+    {
+        Log('*** WARNING: The buffer was not empty!!! Dumping contents of buffer.', 'Fold.ClearBuffer', -1);
+        for (var ii = 0; ii < QUEUE.length; ++ii)
+        {
+            Log(QUEUE[ii], 'Fold.ClearBuffer', -1);
+        }
+    }
+    QUEUE = new Array();
+}
+
+
 /*Takes in file containing a sequences separated by an endline as well as the output folder.
 The reportObject to execute a call-back on and finally, the constraint file if any*/
 Fold.SFold = function( sequenceFile, targetFolder , reportObj ,constraintFile , callbackArg )
