@@ -17,7 +17,7 @@ function MeltingTCalcRouter(str, prefs) {
             saltConc += prefs.naEnv;
         if (prefs.mgEnv != null)
             saltConc += prefs.mgEnv;
-        meltingT = MeltingTCalc.tm_Salt_Adjusted(str, prefs.naEnv + prefs.mgEnv); //MUST BE IN mM
+        meltingT = MeltingTCalc.tm_Salt_Adjusted(str, saltConc); //MUST BE IN mM
     }
     return meltingT;
 }
