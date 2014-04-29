@@ -68,8 +68,8 @@ var request = new Request
         'cutsites' : ['GUC'],
         'left_arm_min': 5,
         'right_arm_min': 5,
-        'left_arm_max':8,
-        'right_arm_max':8,
+        'left_arm_max':13,
+        'right_arm_max':13,
         'promoter': '',
         'specificity':true
 //        5 TAATACGACTCACTATAGGG

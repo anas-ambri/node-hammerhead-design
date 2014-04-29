@@ -357,6 +357,8 @@ function _handleRequestPart1(request)
                     /*Create cutsite ID*/generatedCutsiteId,
                     rawCandidate.targetLocation,
                     rawCandidate.MeltingTemperature,
+                    rawCandidate.MeltingTemperatureLeft,
+                    rawCandidate.MeltingTemperatureRight,
                     rawCandidate.left,
                     rawCandidate.right
                     );
@@ -807,20 +809,6 @@ function HandleRequestPart8(reportObj)
     var endtime = AlgorithmUtilities.ElapsedTime('Request Ended');
     Log(endtime, 'HandleRequestPart8', 0);
     request.UpdateState(endtime);
-
-    //Delete all folders, except json files
-    var rimraf = require('rimraf'),
-	pathToDirs = path.join(process.cwd(), request.ID);
-    fs.readdir(pathToDirs, function(err, files){
-	if(!err){
-	    files.forEach(function(file){
-		var pathToDir = path.join(pathToDirs, file);
-		if(fs.statSync(pathToDir).isDirectory()){
-		    rimraf(pathToDir,function(){});
-		}
-	    });
-	}
-    });
 
     var reportObject = new ReportObject(request);
     reportObj.ExecuteIfComplete(8);

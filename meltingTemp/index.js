@@ -17,7 +17,7 @@ function MeltingTCalcRouter(str, prefs) {
             saltConc += prefs.naEnv;
         if (prefs.mgEnv != null)
             saltConc += prefs.mgEnv;
-        meltingT = MeltingTCalc.tm_Salt_Adjusted(str, prefs.naEnv + prefs.mgEnv); //MUST BE IN mM
+        meltingT = MeltingTCalc.tm_Salt_Adjusted(str, saltConc); //MUST BE IN mM
     }
     return meltingT;
 }
@@ -36,11 +36,16 @@ function CleanseCandidates(rawCandidatesPerCutsite,prefs)
         {
             var candidate = cutsiteCandidates[jj];
             //Remove non-annealing c (G in this case since it is reverse complemented candidate)
-            var seqToCompute = candidate.seq.substr(0, candidate.cut) + candidate.seq.substr(candidate.cut + 1);
-            
+            //left and right arms are computed individually
+            var seqToCompute = candidate.seq.substr(0, candidate.cut) ;
+            var seqToCompute2 = candidate.seq.substr(candidate.cut + 1);
             var meltingT = MeltingTCalcRouter(seqToCompute, prefs);
-            candidate.MeltingTemperature = meltingT;
-            if (meltingT >= (prefs.tempEnv - MELTING_LOWERBOUND) && meltingT <= (prefs.tempEnv + MELTING_UPPERBOUND))
+            var meltingT2 = MeltingTCalcRouter(seqToCompute2, prefs);
+            candidate.MeltingTemperature = meltingT + meltingT2;
+            candidate.MeltingTemperatureLeft = meltingT;
+            candidate.MeltingTemperatureRight = meltingT2;
+            if (meltingT >= (prefs.tempEnv - MELTING_LOWERBOUND) && meltingT <= (prefs.tempEnv + MELTING_UPPERBOUND) &&
+                meltingT2 >= (prefs.tempEnv - MELTING_LOWERBOUND) && meltingT2 <= (prefs.tempEnv + MELTING_UPPERBOUND))
                 cleansed.push(candidate);
         }
         res.push(cleansed);

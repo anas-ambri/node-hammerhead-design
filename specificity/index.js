@@ -241,6 +241,11 @@ function ParseBlastResults(reportObject)
             var match = MatchArray[jj];
             var cutsite_is = match.s.substr(cutsite.BaseCutindex - match.i - 2, 3);
             var cleaving = cutsite_is == RnaToDna(cutsiteType);//The cutsite is there
+            //we need to find the base of 21/23 or x/y where x are matched pairs and 23 is total pairs. total pairs from blast
+            //may be less than the BaseSeq.length
+            var actualCount =  parseInt(match.p.substr(0,match.p.indexOf('/')) ); 
+            match.p = actualCount + "/" + cutsite.BaseSeq.length +
+                " (" + Math.round(100 * actualCount / cutsite.BaseSeq.length) + '%)';
 
             cutsite.OfftargetLocations.push(match.r + ',' + match.p + ',@' + match.si);
 
