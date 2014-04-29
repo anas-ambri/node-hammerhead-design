@@ -357,6 +357,8 @@ function _handleRequestPart1(request)
                     /*Create cutsite ID*/generatedCutsiteId,
                     rawCandidate.targetLocation,
                     rawCandidate.MeltingTemperature,
+                    rawCandidate.MeltingTemperatureLeft,
+                    rawCandidate.MeltingTemperatureRight,
                     rawCandidate.left,
                     rawCandidate.right
                     );
