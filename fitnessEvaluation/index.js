@@ -281,6 +281,11 @@ function EvaluateFitnesses(request) {
                 //if it has both, it would mean that it is easier to have a completely open cutsite than a normal cutsite.
                 candidate.Fitness_Target_dG = Math.abs(  request.AverageLowestFreeEnergy - cutsite.AverageLowestFreeEnergy );
                 candidate.MeltingTemperature = Math.round(100*(candidate.MeltingTemperature - 276))/100; //Reconvert to degrees
+                
+                candidate.MeltingTemperatureLeft = Math.round(100*(candidate.MeltingTemperatureLeft - 276))/100; //Reconvert to degrees
+                candidate.MeltingTemperatureRight = Math.round(100*(candidate.MeltingTemperatureRight - 276))/100; //Reconvert to degrees
+                
+                
                 candidate.Fitness_Specificity = Math.round(100*cutsite.SpecificityFitness)/100;
                 //Find max and min values for normalization
                 if (candidate.Fitness_Target > Max_Target)
