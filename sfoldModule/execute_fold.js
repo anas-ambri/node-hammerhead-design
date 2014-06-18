@@ -8,7 +8,7 @@ var unafold_path = config.env.unafold_path;
 //This variable holds how many folds are executing at a time, so that no more than BUFFER_MAX execute simultaneously.
 //(any
 var BufferCount = 0;
-var BUFFER_MAX = 3;
+var BUFFER_MAX = 2;
 
 var SFOLD_COMMAND = process.platform === 'win32' ? 'sfold.exe' : sfold_path;
 var UNAFOLD_COMMAND = process.platform === 'win32' ? 'sfold.exe' : unafold_path;
@@ -26,7 +26,7 @@ Fold.ClearBuffer = function ()
         Log('*** WARNING: The buffer was not empty!!! Dumping contents of buffer.', 'Fold.ClearBuffer', -1);
         for (var ii = 0; ii < QUEUE.length; ++ii)
         {
-            Log(QUEUE[ii], 'Fold.ClearBuffer', -1);
+            Log(QUEUE[ii][0]/*seq file name is at index 0*/, 'Fold.ClearBuffer', -1);
         }
     }
     QUEUE = new Array();
@@ -59,7 +59,7 @@ Fold.SFold = function( sequenceFile, targetFolder , reportObj ,constraintFile , 
 	    BufferCount += 1;
 	    exec(command,
             {
-                'timeout' : 1200000 //20 min timeout
+                'timeout' :  3600000//60 min timeout// 1200000 //20 min timeout
             }
             ,
             function CommandExecuteCallback(error, stdout, stderr) {
@@ -81,6 +81,7 @@ Fold.SFold = function( sequenceFile, targetFolder , reportObj ,constraintFile , 
                         request.Completed = true;
                         request.Callback(request);
                     }
+                    // if SIGTERM and Error Code == null -> timeout
                     return;
                 }
 
