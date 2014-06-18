@@ -177,12 +177,12 @@ function VerifyParameters(request)
         request.UpdateState("Right arm minumum is less than 1!");
         allOk = false;
     }
-    if (request.Preferences.left_arm_max > 16) {
-        request.UpdateState("Left arm max is more than 16!");
+    if (request.Preferences.left_arm_max > 18) {
+        request.UpdateState("Left arm max is more than 18!");
         allOk = false;
     }
-    if (request.Preferences.right_arm_max > 16) {
-        request.UpdateState("Right arm max is more than 16!");
+    if (request.Preferences.right_arm_max > 18) {
+        request.UpdateState("Right arm max is more than 18!");
         allOk = false;
     }
 
@@ -245,12 +245,12 @@ function EstimateTime(request) {
 */
 function HandleRequestPart1(request)
 {
-    var startime = AlgorithmUtilities.ElapsedTime('Request Begun');
+    var startime = AlgorithmUtilities.ElapsedTime('Request '+ request.ID+ ' has begun');
     Log(startime, 'HandleRequestPart1', 0);
     request.UpdateState(startime);
     var estimate = EstimateTime(request);
     Log('Estimate is ' + estimate + ' minutes', 'HandleRequestPart1', 0);
-    /*WARNING: This excution clears the queue of waiting folds which should be empty UNLESS simulateneous 'requests' were 
+    /*WARNING: This execution clears the queue of waiting folds which should be empty UNLESS simulateneous 'requests' were 
     to be supported. If in the future should the code be modified to support such, this must be taken into account.
     This was necessary to protect from an unknown bug in which a fold was never executed.
     */

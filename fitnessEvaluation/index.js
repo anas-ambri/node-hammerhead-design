@@ -314,7 +314,7 @@ function EvaluateFitnesses(request) {
                 //make 1.0 the best and 0.0 the worst. Currently bigger is worst
                 var candidate = cutsite.Candidates[kk];
                 candidate.Fitness_Target = 1 - (  (candidate.Fitness_Target - Min_Target) / (Max_Target - Min_Target )) ;
-                candidate.Fitness_Shape = 1 - ( (candidate.Fitness_Shape - Min_Shape) / (Max_Shape - Min_Target))  ;
+                candidate.Fitness_Shape = 1 - ( (candidate.Fitness_Shape - Min_Shape) / (Max_Shape - Min_Shape))  ;
                 candidate.Fitness_Target_dG = 1 - ( (candidate.Fitness_Target_dG - Min_dG) / (Max_dG-Min_dG)) ;
                 //Round
                 candidate.Fitness_Target = Math.round(1000 * candidate.Fitness_Target ) / 1000;
