@@ -214,6 +214,13 @@ function VerifyParameters(request)
         request.UpdateState("ID of core type provided is not recognized");
         allOk = false;
     }
+    
+    if (request.TargetSequence.length > 2000 )
+    {
+      request.UpdateState("The sequence is too long. For the purposes of fair use of the software, please keep sequences under 2000 nucleotides.");
+      allOk = false;
+    }
+    
     return allOk;
 }
 
