@@ -59,7 +59,7 @@ Fold.SFold = function( sequenceFile, targetFolder , reportObj ,constraintFile , 
 	    BufferCount += 1;
 	    exec(command,
             {
-                'timeout' :  3600000//60 min timeout// 1200000 //20 min timeout
+                'timeout' :  4200000 //1h and a bit //3600000//60 min timeout// 1200000 //20 min timeout
             }
             ,
             function CommandExecuteCallback(error, stdout, stderr) {

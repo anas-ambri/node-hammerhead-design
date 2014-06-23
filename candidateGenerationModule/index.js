@@ -26,7 +26,11 @@ function FindCutsites(seq, cutSiteType)
 	}
 	while (res !== -1);
 	Log("Number of cutsites type " + cutSiteType + " found was " + loc.length, "FindCusites", 20);
-
+  if( loc.length > 40 )
+  {  
+    Log("WARNING: Preventive measures are in effect as more than 40 cut-sites where found. Only first 10 will be kept")
+    loc.splice(10);
+  }   
 	return loc;
 }
 
