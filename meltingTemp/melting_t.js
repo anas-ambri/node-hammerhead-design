@@ -43,14 +43,14 @@ function tm_Salt_Adjusted(str, conc_salt)
         var res = nAT * 2 + nGC * 4 - 7.209288 * Math.log(0.050) + 7.209288 * Math.log(conc_salt / 1000);
         return res + 273;
     }
-    else if (str.length < 100)
+    else if (str.length < 50)
     {
         var res = 100.5 + (41 * (nGC) / (nAT + nGC)) - (820 / (nAT + nGC)) + 7.209288 * Math.log(conc_salt / 1000);
         return res + 273;
     }
     else
     {
-        var res = 81.5 + 7.209288 * Math.log(conc_salt / 1000) + 0.41 * percentGC - 675 / str.length/*check if last factor should be 500/length*/;
+        var res = 79.8 + (8.0344479 * Math.log(conc_salt / 1000)) + (0.584 * percentGC) + (0.118 * percentGC * percentGC) - (820 / str.length);
         return res + 273;
     }
 }
