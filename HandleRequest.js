@@ -177,12 +177,12 @@ function VerifyParameters(request)
         request.UpdateState("Right arm minumum is less than 1!");
         allOk = false;
     }
-    if (request.Preferences.left_arm_max > 18) {
-        request.UpdateState("Left arm max is more than 18!");
+    if (request.Preferences.left_arm_max > 23) {
+        request.UpdateState("Left arm max is more than 23!");
         allOk = false;
     }
-    if (request.Preferences.right_arm_max > 18) {
-        request.UpdateState("Right arm max is more than 18!");
+    if (request.Preferences.right_arm_max > 23) {
+        request.UpdateState("Right arm max is more than 23!");
         allOk = false;
     }
 
