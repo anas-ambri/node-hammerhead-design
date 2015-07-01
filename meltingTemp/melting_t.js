@@ -50,7 +50,7 @@ function tm_Salt_Adjusted(str, conc_salt)
     }
     else
     {
-	var res = 79.8 + (8.0344479 * Math.log(conc_salt / 1000)) + (0.584 * percentGC) + (0.118 * percentGC * percentGC) - (820 / str.length);
+	var res = 81.5 + 7.209288 * Math.log(conc_salt / 1000) + 0.41 * percentGC - 675 / str.length;
         return res + 273;
     }
 }

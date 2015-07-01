@@ -1,6 +1,6 @@
 var MeltingTCalc = require('./melting_t.js');
-var MELTING_LOWERBOUND = -1 ; //That is at temperature of environment
-var MELTING_UPPERBOUND = 44 ; //That is 45 degrees above environment T
+var MELTING_LOWERBOUND = 5 ; //That is 5 below temperature of environment
+var MELTING_UPPERBOUND = 40 ; //That is 40 degrees above environment T
 
 
 function MeltingTCalcRouter(str, prefs) {
