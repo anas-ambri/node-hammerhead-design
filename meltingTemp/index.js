@@ -1,6 +1,6 @@
 var MeltingTCalc = require('./melting_t.js');
 var MELTING_LOWERBOUND = 5 ; //That is 5 below temperature of environment
-var MELTING_UPPERBOUND = 40 ; //That is 40 degrees above environment T
+var MELTING_UPPERBOUND = 60 ; //That is 40 degrees above environment T
 
 
 function MeltingTCalcRouter(str, prefs) {
@@ -15,7 +15,7 @@ function MeltingTCalcRouter(str, prefs) {
     else {
         if (prefs.naEnv != null)
             saltConc += prefs.naEnv;
-        if (prefs.naEnv != null)
+        if (prefs.mgEnv != null)
             saltConc += prefs.mgEnv;
 
         meltingT = MeltingTCalc.tm_Salt_Adjusted(str, saltConc); //MUST BE IN mM
