@@ -1,5 +1,4 @@
 var MeltingTCalc = require('./melting_t.js');
-var Log = require('./../log/').Log;
 var MELTING_LOWERBOUND = 5 ; //That is 5 below temperature of environment
 var MELTING_UPPERBOUND = 60 ; //That is 40 degrees above environment T
 
@@ -49,8 +48,6 @@ function CleanseCandidates(rawCandidatesPerCutsite,prefs)
             if (meltingT >= (prefs.tempEnv - MELTING_LOWERBOUND) && meltingT <= (prefs.tempEnv + MELTING_UPPERBOUND) &&
                 meltingT2 >= (prefs.tempEnv - MELTING_LOWERBOUND) && meltingT2 <= (prefs.tempEnv + MELTING_UPPERBOUND)) {
 		cleansed.push(candidate);
-	    } else {
-		Log("meltingT " + meltingT + " meltingT2 " + meltingT2 + " tempEnv " + prefs.tempEnv, "CleanseCandidates", 1);
 	    }
         }
         res.push(cleansed);
