@@ -1,5 +1,5 @@
 var MeltingTCalc = require('./melting_t.js');
-var Log = require('./log/').Log;
+var Log = require('./../log/').Log;
 var MELTING_LOWERBOUND = 5 ; //That is 5 below temperature of environment
 var MELTING_UPPERBOUND = 60 ; //That is 40 degrees above environment T
 
