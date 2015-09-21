@@ -158,6 +158,8 @@ function CheckResults(args) {
             'Content-Length': GET_PARAMS.length
         }
     };
+    Log("GET_OPTIONS " + JSON.stringify(GET_OPTIONS));
+    Log("GET_PARAMS " + GET_PARAMS);
 
     // Set up the request
     var post_req = http.request(GET_OPTIONS, function (res) {
@@ -287,6 +289,7 @@ function parseQueries(query) {
     
     var queryNum = matches.splice(0, 1);
     queryNum = parseInt(queryNum[0].split('\n')[0]);
+    console.log("Query " + JSON.stringify(query));
     console.log("Entered query with match number:" + matches.length);
     var res = new Array();
     //Extract relevant information for the match
